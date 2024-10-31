@@ -1,0 +1,9 @@
+1) Faire au début un algo glouton pour classer les départs selon l'heure de début et l'Estimated take off time (ETOT)  : on a donc un TTOT (avec des retards) tq ETOT < TTOT
+
+On a donc une attente égale à TTOT - ETOT
+
+Voir conflits de parking avec les arrivées
+
+Il faut ensuite respecter les créneaux du NMOC tq ETOT appartient à [-5, +10]
+
+2) Optimiser l'algo 
