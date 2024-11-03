@@ -42,3 +42,4 @@ let () =
   let info = extraire_info fichier in
   fermer_fichier fichier;
   (*afficher_info info*)
+  
