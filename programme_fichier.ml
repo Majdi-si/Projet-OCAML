@@ -56,6 +56,7 @@ let afficher_info_etot liste =
     Printf.printf "Indicatif : %s -> ETOT: %d\n" indicatif etot;
     )liste
  
+
 (*Programme principal*)
 
 let () =
@@ -63,6 +64,5 @@ let () =
   let info = extraire_info fichier in
   fermer_fichier fichier;
   let info_etot = calculer_etot info in
-  afficher_info_etot info_etot;
-  (*afficher_info info*)
-  
+  (* afficher_info info *)
+  ()
