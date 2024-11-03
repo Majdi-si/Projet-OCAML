@@ -1,13 +1,13 @@
 (* Fonction pour calculer l'ETOT*)
 let calculer_etot liste = 
- list.map(fun(type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points)-> 
+ List.map(fun(type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points)-> 
  let etot = 
-      if type_vol = "dep" then
+      if type_vol = "DEP" then
         let heure_debut_int = int_of_string heure_debut in
         let nombre_points = List.length points in
         heure_debut_int + (5 * nombre_points)
       else
-       None
+       0
     in
     (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot)
     )liste
