@@ -51,11 +51,42 @@ let calculer_etot liste =
 
 (* Fonction pour afficher la liste avec ETOT *)
 let afficher_info_etot liste =
-(*Je veux seulement afficher l'etot*)
   List.iter (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot) ->
     Printf.printf "Indicatif : %s -> ETOT: %d\n" indicatif etot;
     )liste
- 
+
+(* Fonction pour regrouper les vols par piste *)
+let vol_par_piste liste = 
+  (* Crée une liste de tuples (qfu, info) où info est un tuple contenant les informations du vol *)
+  let liste_piste = List.map (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot) -> 
+    (qfu, (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot))
+  ) liste in
+
+  (* Trie la liste des vols par qfu *)
+  let liste_piste_triee = List.sort (fun (qfu1, _) (qfu2, _) -> compare qfu1 qfu2) liste_piste in
+
+  (* Agrège les vols par qfu *)
+  let liste_piste_agregee = List.fold_left (fun acc (qfu, info) ->  (*fold_left prend une liste et un accumulateur et applique une fonction à chaque élément de la liste*)
+    match acc with
+    | [] -> [(qfu, [info])]  (* Si la liste est vide, crée une nouvelle entrée *)
+    | (qfu', liste) :: reste when qfu = qfu' -> (qfu', info :: liste) :: reste  (* Ajoute le vol à la liste existante pour ce qfu *)
+    | _ -> (qfu, [info]) :: acc  (* Crée une nouvelle entrée pour un nouveau qfu *)
+  ) [] liste_piste_triee in
+
+  (* Retourne la liste agrégée *)
+  liste_piste_agregee
+
+
+
+let afficher_liste_piste liste = 
+  List.iter (fun (qfu, liste) -> 
+    Printf.printf "Piste %s\n" qfu;
+    List.iter (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot) -> 
+      Printf.printf "Indicatif : %s -> ETOT: %d\n" indicatif etot;
+    )liste
+  )liste
+
+
 
 (*Programme principal*)
 
@@ -64,6 +95,10 @@ let () =
   let info = extraire_info fichier in
   fermer_fichier fichier;
   let info_etot = calculer_etot info in
-  afficher_info_etot info_etot;
+  (*afficher_info_etot info_etot ;*)
+  let liste_piste = vol_par_piste info_etot in
+  afficher_liste_piste liste_piste;
+
   (* afficher_info info *)
   ()
+
