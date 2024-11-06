@@ -10,14 +10,16 @@ Il faut ensuite respecter les créneaux du NMOC tq ETOT appartient à [-5, +10]
 
 2) Optimiser l'algo 
 
-Séance 2 : Faire un type vol et mettre un champ mutable dedans pour etot et ensuite faire un tableau de vol
+Séance 2 : 
 
+1. Faire un type vol et mettre un champ mutable dedans pour etot et ensuite faire un tableau de vol 
 Faire un .mli pour le type et les fonctions (ex : mettre juste type vol et les signatures des fonctions)
+Faire un makefile
 
-Faire un liste d'etot par piste et ensuite faire un algo pour les trier en appliquant les contraintes
+2.Faire un liste d'etot par piste et ensuite faire un algo pour les trier en appliquant les contraintes
 
-Calculer les conflits de parking (on dit que le temps d'embarquement est de 15 minutes)
+3. Calculer les conflits de parking (on dit que le temps d'embarquement est de 15 minutes)
 
-Tous les calculs pour les vols se font dans un même module
+! Tous les calculs pour les vols se font dans un même module !
 
-Le reste dans un autre module
+! Le reste dans un autre module !
