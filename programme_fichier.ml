@@ -55,7 +55,7 @@ let afficher_info_etot liste =
     Printf.printf "Indicatif : %s -> ETOT: %d\n" indicatif etot;
     )liste
 
-(* Fonction pour regrouper les vols par piste *)
+(* Fonction pour regrouper les vols par piste 
 let vol_par_piste liste = 
   (* Crée une liste de tuples (qfu, info) où info est un tuple contenant les informations du vol *)
   let liste_piste = List.map (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot) -> 
@@ -85,7 +85,7 @@ let afficher_liste_piste liste =
       Printf.printf "Indicatif : %s -> ETOT: %d\n" indicatif etot;
     )liste
   )liste
-
+*)
 
 
 (*Programme principal*)
@@ -95,9 +95,9 @@ let () =
   let info = extraire_info fichier in
   fermer_fichier fichier;
   let info_etot = calculer_etot info in
-  (*afficher_info_etot info_etot ;*)
-  let liste_piste = vol_par_piste info_etot in
-  afficher_liste_piste liste_piste;
+  afficher_info_etot info_etot ;
+  (*let liste_piste = vol_par_piste info_etot in
+  afficher_liste_piste liste_piste;*)
 
   (* afficher_info info *)
   ()
