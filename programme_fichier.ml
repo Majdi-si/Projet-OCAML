@@ -1,3 +1,19 @@
+type vol = {
+  type_vol : string;
+  indicatif : string;
+  turbulence : string;
+  parking : string;
+  qfu : string;
+  heure_debut : string;
+  heure_piste : string;
+  creneau : string;
+  points : string list;
+  mutable etot : int;
+}
+
+(*Programme pour ouverture et lecture du fichier*)
+
+
 (*Prgramme pour ouverture et lecture du fichier*)
 
 let ouvrir_fichier nom_fichier =
