@@ -29,11 +29,23 @@ let ouvrir_fichier nom_fichier =
 let rec extraire_info fichier =
   try
     let ligne = input_line fichier in
-    let info = Str.split (Str.regexp " ") ligne in
-    match info with
-    | type_vol :: indicatif :: turbulence :: parking :: qfu :: heure_debut :: heure_piste :: creneau :: points ->
-        (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points) :: (extraire_info fichier)
-    | _ -> extraire_info fichier
+    let champs = String.split_on_char ',' ligne in
+    match champs with
+    | type_vol :: indicatif :: turbulence :: parking :: qfu :: heure_debut :: heure_piste :: creneau :: points :: _ ->
+      let vol = {
+        type_vol;
+        indicatif;
+        turbulence;
+        parking;
+        qfu;
+        heure_debut;
+        heure_piste;
+        creneau;
+        points = String.split_on_char ';' points;
+        etot = 0;
+      } in
+      vol :: extraire_info fichier
+    | _ -> failwith "Format de ligne invalide"
   with
     End_of_file -> []
 
@@ -44,12 +56,13 @@ let fermer_fichier fichier =
 
 (*Programme pour afficher les informations*)
 
-let afficher_info info =
-  List.iter (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points) ->
-    Printf.printf "%s %s %s %s %s %s %s %s\n" type_vol indicatif turbulence parking qfu heure_debut heure_piste creneau;
-    List.iter (fun point -> Printf.printf "%s " point) points;
-    Printf.printf "\n"
-  ) info
+let afficher_info vol =
+  List.iter (fun vol ->
+    Printf.printf "Type de vol : %s\nIndicatif : %s\nTurbulence : %s\nParking : %s\nQFU : %s\nHeure de début : %s\nHeure piste : %s\nCréneau : %s\nPoints : %s\n"
+      vol.type_vol vol.indicatif vol.turbulence vol.parking vol.qfu vol.heure_debut vol.heure_piste vol.creneau (String.concat ";" vol.points);
+  ) vol
+
+
 
 (* Fonction pour calculer l'ETOT*)
 let calculer_etot liste = 
@@ -108,13 +121,13 @@ let afficher_liste_piste liste =
 
 let () =
   let fichier = ouvrir_fichier "data/lfpg_flights.txt" in
-  let info = extraire_info fichier in
+  let vol = extraire_info fichier in
   fermer_fichier fichier;
-  let info_etot = calculer_etot info in
-  afficher_info_etot info_etot ;
+  (*let info_etot = calculer_etot info in
+  afficher_info_etot info_etot ;*)
   (*let liste_piste = vol_par_piste info_etot in
   afficher_liste_piste liste_piste;*)
 
-  (* afficher_info info *)
+  afficher_info vol;
   ()
 
