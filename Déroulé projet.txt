@@ -12,8 +12,8 @@ Il faut ensuite respecter les créneaux du NMOC tq ETOT appartient à [-5, +10]
 
 Séance 2 : 
 
-1. Faire un type vol et mettre un champ mutable dedans pour etot et ensuite faire un tableau de vol 
-Faire un .mli pour le type et les fonctions (ex : mettre juste type vol et les signatures des fonctions)
+1. Faire un type vol et mettre un champ mutable dedans pour etot et ensuite faire un tableau de vol -> OK
+Faire un .mli pour le type et les fonctions (ex : mettre juste type vol et les signatures des fonctions) -> OK
 Faire un makefile
 
 2.Faire un liste d'etot par piste et ensuite faire un algo pour les trier en appliquant les contraintes (TTOT)
