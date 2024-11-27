@@ -74,7 +74,7 @@ let afficher_info vols =
     Printf.printf "Points : %s\n" (String.concat ", " vol.points);
     Printf.printf "ETOT : %d\n" vol.etot;
     Printf.printf "\n";
-  ) vols
+  ) vols 
 (*Programme pour calculer l'ETOT*)
 
 
