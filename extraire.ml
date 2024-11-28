@@ -1,7 +1,6 @@
 module PF = ProgrammeFichier
 
-
-(* Fonction qui extrait les informations et les stocke dans un tableau mutable (je reprends la meme fonction extraire_info)*)
+(* Fonction qui extrait les informations et les stocke dans un tableau mutable *)
 let rec extraire_info fichier tableau_ref =
   try
     (* Lire une ligne du fichier *)
@@ -21,7 +20,7 @@ let rec extraire_info fichier tableau_ref =
       let points = PF.drop 8 champs in
       let etot = 0 in
       (* Créer un enregistrement vol *)
-      let vol_info = {PF.type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} in
+      let vol_info = {PF.type_vol = type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} in
       (* Ajouter l'enregistrement au tableau mutable *)
       tableau_ref := Array.append !tableau_ref [|vol_info|];
       (* Appel récursif pour traiter la ligne suivante *)
