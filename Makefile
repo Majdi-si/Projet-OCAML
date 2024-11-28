@@ -1,5 +1,5 @@
-SOURCES = programme_fichier.ml
-TARGET = programme_fichier
+SOURCES = programme_fichier.ml extraire.ml Etot.ml main.ml
+TARGET = main
 
 OCAMLC   = ocamlc -g
 OCAMLOPT = ocamlopt -unsafe -noassert -inline 100

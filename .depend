@@ -1,5 +1,13 @@
 Etot.cmo :
 Etot.cmx :
+extraire.cmo :
+extraire.cmx :
+main.cmo : \
+    extraire.cmo \
+    Etot.cmo
+main.cmx : \
+    extraire.cmx \
+    Etot.cmx
 programme_fichier.cmo : \
     programme_fichier.cmi
 programme_fichier.cmx : \

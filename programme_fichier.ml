@@ -11,11 +11,7 @@ type vol = {
   mutable etot : int;
 }
 
-(*Programme pour ouverture et lecture du fichier*)
-
-
 (*Prgramme pour ouverture et lecture du fichier*)
-
 let ouvrir_fichier nom_fichier =
   try
     open_in nom_fichier
@@ -24,7 +20,6 @@ let ouvrir_fichier nom_fichier =
 
 
 (* Fonction pour obtenir une sous-liste à partir d'un certain index *)
-
 let rec drop n lst =
   match lst with
   | [] -> []
@@ -46,7 +41,7 @@ let rec extraire_info fichier =
     let heure_debut = List.nth champs 5 in
     let heure_piste = List.nth champs 6 in
     let creneau = List.nth champs 7 in
-    let points = drop 8 champs in
+    let points = drop 8 champs in      (* Récupérer les points à partir de l'indice 8 *)
     let etot = 0 in
     (* Créer un enregistrement avec les informations extraites *)
     {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} :: extraire_info fichier
@@ -75,44 +70,4 @@ let afficher_info vols =
     Printf.printf "ETOT : %d\n" vol.etot;
     Printf.printf "\n";
   ) vols 
-(*Programme pour calculer l'ETOT*)
-
-
-
-(* Fonction pour calculer l'ETOT*)
-let calculer_etot vols = 
-  List.map (fun vol -> 
-    let etot = 
-      if vol.type_vol = "DEP" then
-        let heure_debut_int = int_of_string vol.heure_debut in
-        let nombre_points = List.length vol.points in
-        heure_debut_int + (5 * nombre_points)
-      else
-        0
-    in
-    vol.etot <- etot;
-    vol
-  ) vols
-
-(* Fonction pour afficher les informations d'un vol avec l'ETOT *)
-
-let afficher_info_etot vols =
-  List.iter (fun vol ->
-    Printf.printf "ETOT : %d\n" vol.etot;
-    Printf.printf "\n";
-  ) vols
-
-
-
-(*Programme principal*)
-
-let () =
-  let fichier = ouvrir_fichier "data/lfpg_flights.txt" in
-  let vol = extraire_info fichier in
-  fermer_fichier fichier;
-  let info_etot = calculer_etot vol in
-  (*afficher_info_etot info_etot;*)
-
-  (*afficher_info vol;*)
-  ()
 
