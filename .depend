@@ -1,21 +1,23 @@
-Etot.cmo :
-Etot.cmx :
+Etot.cmo : \
+    vol.cmi
+Etot.cmx : \
+    vol.cmx
 extraire.cmo : \
-    programme_fichier.cmi
+    vol.cmi
 extraire.cmx : \
-    programme_fichier.cmx
+    vol.cmx
 main.cmo : \
-    programme_fichier.cmi \
+    vol.cmi \
     extraire.cmo \
     Etot.cmo
 main.cmx : \
-    programme_fichier.cmx \
+    vol.cmx \
     extraire.cmx \
     Etot.cmx
-programme_fichier.cmo : \
-    programme_fichier.cmi
-programme_fichier.cmx : \
-    programme_fichier.cmi
-programme_fichier.cmi :
 test.cmo :
 test.cmx :
+vol.cmo : \
+    vol.cmi
+vol.cmx : \
+    vol.cmi
+vol.cmi :

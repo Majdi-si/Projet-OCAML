@@ -1,21 +1,24 @@
-(* Fonction pour calculer l'ETOT*)
-let calculer_etot liste = 
- List.map(fun(type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points)-> 
- let etot = 
-      if type_vol = "DEP" then
-        let heure_debut_int = int_of_string heure_debut in
-        let nombre_points = List.length points in
+(* Etot.ml *)
+module Vol = Vol
+
+let calculer_etot (vols : Vol.t list) : Vol.t list =
+  List.map (fun (vol : Vol.t) -> 
+    let etot = 
+      if vol.type_vol = "DEP" then
+        let heure_debut_int = int_of_string vol.heure_debut in
+        let nombre_points = List.length vol.points in
         heure_debut_int + (5 * nombre_points)
       else
-       0
+        0
     in
-    (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot)
-    )liste
+    { vol with etot }
+  ) vols
 
-(* Fonction pour afficher la liste avec ETOT *)
-let afficher_info_etot liste =
-  List.iter (fun (type_vol, indicatif, turbulence, parking, qfu, heure_debut, heure_piste, creneau, points, etot) ->
-    Printf.printf "%s %s %s %s %s %s %s %s ETOT: %d\n" type_vol indicatif turbulence parking qfu heure_debut heure_piste creneau etot;
-    List.iter (fun point -> Printf.printf "%s " point) points;
+let afficher_info_etot (vols : Vol.t list) =
+  List.iter (fun (vol : Vol.t) ->
+    Printf.printf "%s %s %s %s %s %s %s %s ETOT: %d\n" vol.type_vol vol.indicatif vol.turbulence vol.parking vol.qfu vol.heure_debut vol.heure_piste vol.creneau vol.etot;
+    List.iter (fun point -> Printf.printf "%s " point) vol.points;
     Printf.printf "\n"
-    )liste
+  ) vols
+
+  for n in range of 0 to length tableau_ref
