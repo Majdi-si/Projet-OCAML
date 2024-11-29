@@ -21,21 +21,20 @@ let afficher_info_etot (vols : Vol.t list) =
 
   (* fonction de filtrage des departs par qfu*)
   let rec dep_qfu = fun l piste ->
-  
-  match l with 
-  [] -> []
-  |t::reste ->
-  if t.type_vol= "DEP" && t.qfu= piste 
-    then t:: dep_qfu reste piste
-  else dep_qfu reste piste
+    match l with 
+    [] -> []
+    |t::reste ->
+      if t.type_vol= "DEP" && t.qfu= piste 
+        then t:: dep_qfu reste piste
+      else dep_qfu reste piste
 
 (* Fonction d' insertion *)
 let rec insere = fun elem liste ->
  match liste with
-|  [] -> elem::[]
-|  tete::queue ->
-   if elem.etot < tete.etot then elem :: liste
-   else tete :: insere elem queue
+  [] -> elem::[]
+  |  tete::queue ->
+     if elem.etot < tete.etot then elem :: liste
+    else tete :: insere elem queue
 
 (* Fonction de tri par insertion *)
 let dep_sort l =
