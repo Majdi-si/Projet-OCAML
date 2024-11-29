@@ -38,7 +38,9 @@ let rec insere = fun elem liste
    else tete :: insere elem queue
 
 let rec dep_sort_qfu = fun l
-match l wi
+match l with
+|  [] -> []
+|  tete::queue -> insere tete (tri_insertion queue)
 
 
   *)
