@@ -1,4 +1,4 @@
-module PF = ProgrammeFichier
+module PF = Programme_fichier
 
 (* Fonction qui extrait les informations et les stocke dans un tableau mutable *)
 let rec extraire_info fichier tableau_ref =

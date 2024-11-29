@@ -1,4 +1,4 @@
-module PF = ProgrammeFichier
+module PF = Programme_fichier
 module Etot = Etot
 module Extraire = Extraire
 
