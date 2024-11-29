@@ -9,6 +9,7 @@ type t = {
   creneau : string;
   points : string list;
   mutable etot : int;
+  mutable ttot : int;
 }
 
 val ouvrir_fichier : string -> in_channel

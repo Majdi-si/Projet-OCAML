@@ -9,6 +9,7 @@ type t = {
   creneau : string;
   points : string list;
   mutable etot : int;
+  mutable ttot : int;
 }
 
 (*Prgramme pour ouverture et lecture du fichier*)
@@ -43,8 +44,9 @@ let rec extraire_info fichier =
     let creneau = List.nth champs 7 in
     let points = drop 8 champs in      (* Récupérer les points à partir de l'indice 8 *)
     let etot = 0 in
+    let ttot = 0 in
     (* Créer un enregistrement avec les informations extraites *)
-    {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} :: extraire_info fichier
+    {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot} :: extraire_info fichier
   with
     (* Gérer la fin du fichier *)
     End_of_file -> []
@@ -58,7 +60,7 @@ let fermer_fichier fichier =
 (* Fonction pour afficher les informations d'un vol *)
 let rec afficher_info = function
   | [] -> ()
-  | {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} :: vols ->
+  | {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot} :: vols ->
     Printf.printf "Type de vol : %s\n" type_vol;
     Printf.printf "Indicatif : %s\n" indicatif;
     Printf.printf "Turbulence : %s\n" turbulence;
@@ -69,5 +71,6 @@ let rec afficher_info = function
     Printf.printf "Créneau : %s\n" creneau;
     Printf.printf "Points : %s\n" (String.concat ", " points);
     Printf.printf "ETOT : %d\n" etot;
+    Printf.printf "TTOT : %d\n" ttot;
     Printf.printf "\n";
     afficher_info vols

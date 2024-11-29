@@ -8,14 +8,22 @@ extraire.cmx : \
     vol.cmx
 main.cmo : \
     vol.cmi \
+    ttot.cmo \
     extraire.cmo \
     Etot.cmo
 main.cmx : \
     vol.cmx \
+    ttot.cmx \
     extraire.cmx \
     Etot.cmx
 test.cmo :
 test.cmx :
+ttot.cmo : \
+    vol.cmi \
+    Etot.cmo
+ttot.cmx : \
+    vol.cmx \
+    Etot.cmx
 vol.cmo : \
     vol.cmi
 vol.cmx : \
