@@ -20,7 +20,7 @@ let afficher_info_etot (vols : Vol.t list) =
   ) vols
 
   (*
-  let rec dep_sort_qfu = fun l piste
+  let rec dep_qfu = fun l piste ->
   
   match l with 
   [] -> []
@@ -30,17 +30,22 @@ let afficher_info_etot (vols : Vol.t list) =
   else dep_sort reste
 
 
-let rec insere = fun elem liste 
+let rec insere = fun elem liste ->
  match liste with
 |  [] -> elem::[]
 |  tete::queue ->
-   if elem < tete then elem :: liste
+   if elem.etot < tete.etot then elem :: liste
    else tete :: insere elem queue
 
-let rec dep_sort_qfu = fun l
-match l with
-|  [] -> []
-|  tete::queue -> insere tete (tri_insertion queue)
+(* Fonction de tri par insertion terminale *)
+let dep_sort l =
+  let rec dep_sort_rec l acc =
+    match l with
+    | [] -> acc  
+    | tete :: queue -> 
+         dep_sort_rec queue (insere tete acc)  
+  in
+  rec dep_sort_rec l []  
 
 
   *)
