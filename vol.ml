@@ -56,17 +56,18 @@ let fermer_fichier fichier =
   close_in fichier
 
 (* Fonction pour afficher les informations d'un vol *)
-let afficher_info vols =
-  List.iter (fun t ->
-    Printf.printf "Type de vol : %s\n" t.type_vol;
-    Printf.printf "Indicatif : %s\n" t.indicatif;
-    Printf.printf "Turbulence : %s\n" t.turbulence;
-    Printf.printf "Parking : %s\n" t.parking;
-    Printf.printf "QFU : %s\n" t.qfu;
-    Printf.printf "Heure de début : %s\n" t.heure_debut;
-    Printf.printf "Heure piste : %s\n" t.heure_piste;
-    Printf.printf "Créneau : %s\n" t.creneau;
-    Printf.printf "Points : %s\n" (String.concat ", " t.points);
-    Printf.printf "ETOT : %d\n" t.etot;
+let rec afficher_info = function
+  | [] -> ()
+  | {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot} :: vols ->
+    Printf.printf "Type de vol : %s\n" type_vol;
+    Printf.printf "Indicatif : %s\n" indicatif;
+    Printf.printf "Turbulence : %s\n" turbulence;
+    Printf.printf "Parking : %s\n" parking;
+    Printf.printf "QFU : %s\n" qfu;
+    Printf.printf "Heure de début : %s\n" heure_debut;
+    Printf.printf "Heure piste : %s\n" heure_piste;
+    Printf.printf "Créneau : %s\n" creneau;
+    Printf.printf "Points : %s\n" (String.concat ", " points);
+    Printf.printf "ETOT : %d\n" etot;
     Printf.printf "\n";
-  ) vols
+    afficher_info vols
