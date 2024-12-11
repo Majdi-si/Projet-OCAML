@@ -45,3 +45,13 @@ let dep_sort l =
          dep_sort_rec queue (insere tete acc)  
   in
    dep_sort_rec l []  
+
+(*Trier les vols par ETOT*)
+let tri_etot (l : Vol.t list) : Vol.t list =
+  let rec tri_etot_rec l acc =
+    match l with
+    | [] -> acc
+    | tete :: queue -> 
+      tri_etot_rec queue (insere tete acc)
+  in
+  tri_etot_rec l []

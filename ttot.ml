@@ -40,7 +40,7 @@ let afficher_info_ttot (vols : Vol.t list) =
 
 let calcul_retard (vols : Vol.t list) =
   let total_diff = List.fold_left (fun acc (vol : Vol.t) ->
-    acc + (vol.etot - vol.ttot)
+    acc + (vol.ttot - vol.etot)
   ) 0 vols in
   Printf.printf "Total difference between TTOT and ETOT in seconds: %d\n" total_diff;
 
