@@ -39,4 +39,13 @@ DEP -> 26R et 27L
 
 Séance 4 :
 
-1. 
+1. Vérifier les calculs: retard moyen par piste, par heure, voir si ça correspond à une autre ou y'a beaucoup de vols etc...26L
+2. prendre en compte l'heure de créneau -> pour les vols où il y en a, on a etot = creneau  --> OK
+3. Voir le nb de creneaux raté : TTOT > creneau + 10 min
+4. DMAN -> Nouveau départ du parking : TTOT - 5*nombre_points
+5. Heure arrivée au parking : Heure_dep + 5*nombre_points
+6. Voir s'il y a des conflits dans le fichier : embarquer = 15 min, débarquer = 15 min
+7. Voir les conflits avec Nouveau départ parking
+8. Par parking: regarder qui occupe le parking quand afin de detecter les conflits (avec Hashtbl (equivalent dictionnaire ocaml))
+9. Utiliser la hashtable pour mettre la liste des vols pour chaque parking
+10. Faire un histogramme par heure pour les retards moyens, ...
