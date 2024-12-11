@@ -44,3 +44,4 @@ let calcul_retard (vols : Vol.t list) =
   ) 0 vols in
   Printf.printf "Total difference between TTOT and ETOT: %d\n" total_diff
 
+  
