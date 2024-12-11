@@ -5,7 +5,7 @@ type category = L | M | H
 
 let separation_time cat1 cat2 =
   match (cat1, cat2) with
-  | ("M", "L") | ("H", "L") | ("H", "M") -> 180
+  | ("L", "M") | ("L", "H") | ("M", "H") -> 180
   | ("H", "H") -> 120
   | _ -> 60
 
@@ -42,5 +42,5 @@ let calcul_retard (vols : Vol.t list) =
   let total_diff = List.fold_left (fun acc (vol : Vol.t) ->
     acc + (vol.ttot - vol.etot)
   ) 0 vols in
-  Printf.printf "Total difference between TTOT and ETOT in seconds: %d\n" total_diff;
+  Printf.printf "Total difference between TTOT and ETOT: %d\n" total_diff
 

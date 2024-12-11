@@ -34,6 +34,9 @@ Séance 3 :
 4. Faire des courbes et histogrammes pour les retards -> utiliser gnuplot ou sinon mettre dans un fichier les données et les traiter avec python
 
 
+ARR -> 26L et 27R
+DEP -> 26R et 27L
+
 Séance 4 :
 
 1. 
