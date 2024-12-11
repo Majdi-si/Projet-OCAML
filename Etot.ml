@@ -36,15 +36,6 @@ let rec insere (elem : Vol.t) (liste : Vol.t list) : Vol.t list =
      if elem.etot < tete.etot then elem :: liste
     else tete :: insere elem queue
 
-(* Fonction de tri par insertion *)
-let dep_sort l =
-  let rec dep_sort_rec l acc =
-    match l with
-    | [] -> acc  
-    | tete :: queue -> 
-         dep_sort_rec queue (insere tete acc)  
-  in
-   dep_sort_rec l []  
 
 (*Trier les vols par ETOT*)
 let tri_etot (l : Vol.t list) : Vol.t list =

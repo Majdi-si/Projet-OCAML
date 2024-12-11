@@ -28,8 +28,12 @@ Faire un makefile
 
 Séance 3 :
 
-1. Renommer programme_fichier.ml en vols.ml
-2. Faire un liste d'etot par piste et ensuite faire un algo pour les trier en appliquant les contraintes (TTOT) dans l'ordre de décollage
+1. Renommer programme_fichier.ml en vols.ml -> ok
+2. Faire un liste d'etot par piste et ensuite faire un algo pour les trier en appliquant les contraintes (TTOT) dans l'ordre de décollage -> ok
 3. Faire algo pour les conflits de parking pour calculer les retards à mettre 
 4. Faire des courbes et histogrammes pour les retards -> utiliser gnuplot ou sinon mettre dans un fichier les données et les traiter avec python
-5. 
+
+
+Séance 4 :
+
+1. 
