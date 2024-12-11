@@ -28,6 +28,16 @@ let afficher_info_etot (vols : Vol.t list) =
         then t:: dep_qfu reste piste
       else dep_qfu reste piste
 
+
+  (* fonction de filtrage des arrivée par qfu*)
+  let rec arr_qfu (l : Vol.t list) (piste : string) : Vol.t list =
+    match l with 
+    [] -> []
+    |t::reste ->
+      if t.type_vol= "ARR" && t.qfu= piste 
+        then t:: arr_qfu reste piste
+      else arr_qfu reste piste
+
 (* Fonction d' insertion *)
 let rec insere (elem : Vol.t) (liste : Vol.t list) : Vol.t list =
   match liste with

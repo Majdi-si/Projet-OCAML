@@ -10,16 +10,9 @@ let () =
   close_in fichier;
   let vols_avec_etot = Etot.calculer_etot vols in
   let vols_piste_26R = Etot.dep_qfu vols_avec_etot "26R" in
-  let vols_piste_26L = Etot.dep_qfu vols_avec_etot "26L" in
-  let vols_piste_27R = Etot.dep_qfu vols_avec_etot "27R" in
   let vols_piste_27L = Etot.dep_qfu vols_avec_etot "27L" in
   let vols_tries_26R = Etot.tri_etot vols_piste_26R in
-  let vols_tries_26L = Etot.tri_etot vols_piste_26L in
-  let vols_tries_27R = Etot.tri_etot vols_piste_27R in
   let vols_tries_27L = Etot.tri_etot vols_piste_27L in
   let ttot_26R = Ttot.calculer_ttot vols_tries_26R in
-  let ttot_26L = Ttot.calculer_ttot vols_tries_26L in
-  let ttot_27R = Ttot.calculer_ttot vols_tries_27R in
-  let ttot_27L = Ttot.calculer_ttot vols_tries_27L in
   Vol.afficher_info ttot_26R;
   Ttot.calcul_retard ttot_26R;
