@@ -11,4 +11,5 @@ let () =
   let vols_avec_etot = Etot.calculer_etot vols in
   let tri_etot = Etot.tri_etot vols_avec_etot in
   let vols_avec_ttot = Ttot.calculer_ttot tri_etot in
-  Ttot.calcul_retard vols_avec_ttot;
+  Ttot.afficher_info_ttot vols_avec_ttot;
+  Vol.afficher_info vols_avec_ttot;

@@ -5,9 +5,9 @@ type category = L | M | H
 
 let separation_time cat1 cat2 =
   match (cat1, cat2) with
-  | ("L", "M") | ("L", "H") | ("M", "H") -> 3
-  | ("H", "H") -> 2
-  | _ -> 1
+  | ("M", "L") | ("H", "L") | ("H", "M") -> 180
+  | ("H", "H") -> 120
+  | _ -> 60
 
 let calculer_ttot (vols : Vol.t list) : Vol.t list =
   let rec aux (vols : Vol.t list) (ttot : int) : Vol.t list =
