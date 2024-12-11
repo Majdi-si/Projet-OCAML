@@ -16,6 +16,8 @@ main.cmx : \
     ttot.cmx \
     extraire.cmx \
     Etot.cmx
+programme_fichier.cmo :
+programme_fichier.cmx :
 test.cmo :
 test.cmx :
 ttot.cmo : \

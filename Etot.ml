@@ -20,7 +20,7 @@ let afficher_info_etot (vols : Vol.t list) =
   ) vols
 
   (* fonction de filtrage des departs par qfu*)
-  let rec dep_qfu = fun l piste ->
+  let rec dep_qfu (l : Vol.t list) (piste : string) : Vol.t list =
     match l with 
     [] -> []
     |t::reste ->
@@ -29,8 +29,8 @@ let afficher_info_etot (vols : Vol.t list) =
       else dep_qfu reste piste
 
 (* Fonction d' insertion *)
-let rec insere = fun elem liste ->
- match liste with
+let rec insere (elem : Vol.t) (liste : Vol.t list) : Vol.t list =
+  match liste with
   [] -> elem::[]
   |  tete::queue ->
      if elem.etot < tete.etot then elem :: liste
