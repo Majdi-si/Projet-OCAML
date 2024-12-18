@@ -58,3 +58,8 @@ let tri_etot (l : Vol.t list) : Vol.t list =
       tri_etot_rec queue (insere tete acc)
   in
   tri_etot_rec l []
+
+
+
+
+  
