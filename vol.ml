@@ -11,6 +11,7 @@ type t = {
   mutable etot : int;
   mutable ttot : int;
   mutable dman : int
+  mutable heure_parking : int
 }
 
 (*Prgramme pour ouverture et lecture du fichier*)
