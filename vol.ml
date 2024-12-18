@@ -10,6 +10,7 @@ type t = {
   points : string list;
   mutable etot : int;
   mutable ttot : int;
+  mutable dman : int
 }
 
 (*Prgramme pour ouverture et lecture du fichier*)
