@@ -1,4 +1,5 @@
 module Vol = Vol
+module TTOT= Ttot
 
 let calculer_dman (vols : Vol.t list) : Vol.t list =
   List.map (fun (vol : Vol.t) -> 
@@ -18,3 +19,12 @@ let calculer_heure_parking (vols : Vol.t list) : Vol.t list =
     in
     { vol with heure_parking }   
   ) vols
+
+let nbre_creneaux_rates (vols : Vol.t list) : Vol.t list =
+  let rec creneau_rec acc (vols : Vol.t list) =
+    match vols with
+    [] ->  acc
+    |vol::reste -> 
+      if vol.ttot > vol.creneau + 600 then  creneau_rec (acc + 1) reste
+      else   creneau_rec acc reste in
+  creneau_rec 0 vols
