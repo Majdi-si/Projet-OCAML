@@ -2,6 +2,8 @@ Etot.cmo : \
     vol.cmi
 Etot.cmx : \
     vol.cmx
+dman.cmo :
+dman.cmx :
 extraire.cmo : \
     vol.cmi
 extraire.cmx : \

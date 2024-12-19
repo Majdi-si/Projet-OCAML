@@ -16,3 +16,5 @@ let () =
   let ttot_26R = Ttot.calculer_ttot vols_tries_26R in
   Vol.afficher_info ttot_26R;
   Ttot.calcul_retard ttot_26R;
+  let creneau = 15 in
+  Ttot.nb_creneaux_rate ttot_26R creneau;
