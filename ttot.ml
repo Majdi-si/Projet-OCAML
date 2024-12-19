@@ -38,4 +38,34 @@ let calcul_retard (vols : Vol.t list) =
       if vol.ttot > creneau + 600 then acc + 1 else acc
     ) 0 vols in
     Printf.printf "Nombre de créneaux ratés: %d\n" count;
-    Printf.printf "Pourcentage de créneaux ratés: %.2f%%\n" (float_of_int count /. float_of_int (List.length vols) *. 100.0)
+    Printf.printf "Pourcentage de créneaux ratés: %.2f%%\n" (float_of_int count /. float_of_int (List.length vols) *. 100.0);
+    Printf.printf "Vols ratés: ";
+      List.iter (fun (vol : Vol.t) ->
+        if vol.ttot > creneau + 600 then
+        Printf.printf "%s " vol.indicatif
+      ) vols;
+      Printf.printf "\n"
+
+
+let retard_moyen_par_heure (vols : Vol.t list) =
+  let heures = Array.make 24 (0, 0) in
+  List.iter (fun (vol : Vol.t) ->
+    let heure = vol.etot / 3600 in
+    let (total_retard, count) = heures.(heure) in
+    heures.(heure) <- (total_retard + (vol.ttot - vol.etot), count + 1)
+  ) vols;
+  Array.iteri (fun heure (total_retard, count) ->
+    if count > 0 then
+      Printf.printf "Heure %02d: Retard moyen = %.2f\n" heure (float_of_int total_retard /. float_of_int count)
+    else
+      Printf.printf "Heure %02d: Aucun vol\n" heure
+  ) heures
+
+let retard_moyen_global (vols : Vol.t list) =
+  let total_retard, count = List.fold_left (fun (acc_retard, acc_count) (vol : Vol.t) ->
+    (acc_retard + (vol.ttot - vol.etot), acc_count + 1)
+  ) (0, 0) vols in
+  if count > 0 then
+    Printf.printf "Retard moyen global = %.2f\n" (float_of_int total_retard /. float_of_int count)
+  else
+    Printf.printf "Aucun vol\n";

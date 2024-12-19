@@ -15,6 +15,7 @@ let () =
   let vols_tries_27L = Etot.tri_etot vols_piste_27L in
   let ttot_26R = Ttot.calculer_ttot vols_tries_26R in
   Vol.afficher_info ttot_26R;
-  Ttot.calcul_retard ttot_26R;
+  (*Ttot.calcul_retard ttot_26R;
   let creneau = 15 in
-  Ttot.nb_creneaux_rate ttot_26R creneau;
+  Ttot.nb_creneaux_rate ttot_26R creneau;*)
+  Ttot.retard_moyen_par_heure vols_tries_26R;
