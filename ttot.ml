@@ -1,5 +1,7 @@
 module Etot = Etot
 module Vol = Vol
+open Printf
+
 
 type category = L | M | H
 
@@ -69,3 +71,33 @@ let retard_moyen_global (vols : Vol.t list) =
     Printf.printf "Retard moyen global = %.2f minutes\n" (float_of_int total_retard /. float_of_int count /. 60.0)
   else
     Printf.printf "Aucun vol\n"
+
+
+let ecrire_retard_par_heure_csv (vols : Vol.t list) (nom_fichier : string) =
+  let heures = Array.make 24 (0, 0) in
+  List.iter (fun (vol : Vol.t) ->
+    let heure = vol.etot / 3600 in
+    let (total_retard, count) = heures.(heure) in
+    heures.(heure) <- (total_retard + (vol.ttot - vol.etot), count + 1)
+  ) vols;
+  let fichier = open_out nom_fichier in
+  fprintf fichier "Heure,Retard moyen (minutes)\n";
+  Array.iteri (fun heure (total_retard, count) ->
+    if count > 0 then
+      fprintf fichier "%02d,%.2f\n" heure (float_of_int total_retard /. float_of_int count /. 60.0)
+    else
+      fprintf fichier "%02d,Aucun vol\n" heure
+  ) heures;
+  close_out fichier
+
+let ecrire_retard_global_csv (vols : Vol.t list) (nom_fichier : string) =
+  let total_retard, count = List.fold_left (fun (acc_retard, acc_count) (vol : Vol.t) ->
+    (acc_retard + (vol.ttot - vol.etot), acc_count + 1)
+  ) (0, 0) vols in
+  let fichier = open_out nom_fichier in
+  fprintf fichier "Retard moyen global (minutes)\n";
+  if count > 0 then
+    fprintf fichier "%.2f\n" (float_of_int total_retard /. float_of_int count /. 60.0)
+  else
+    fprintf fichier "Aucun vol\n";
+  close_out fichier

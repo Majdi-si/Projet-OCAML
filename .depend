@@ -13,12 +13,14 @@ extraire.cmx : \
 main.cmo : \
     vol.cmi \
     ttot.cmo \
+    parking.cmo \
     extraire.cmo \
     Etot.cmo \
     dman.cmo
 main.cmx : \
     vol.cmx \
     ttot.cmx \
+    parking.cmx \
     extraire.cmx \
     Etot.cmx \
     dman.cmx

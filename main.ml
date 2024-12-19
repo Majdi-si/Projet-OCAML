@@ -3,6 +3,7 @@ module Etot = Etot
 module Extraire = Extraire
 module Ttot = Ttot
 module Dman = Dman
+module Parking = Parking
 
 (* Fonction principale *)
 let () =
@@ -14,4 +15,9 @@ let () =
   let dmans = Dman.calculer_dman vols_piste_26L in
   Vol.afficher_info dmans;
   let heure_piste = Dman.calculer_heure_parking dmans in
-  Vol.afficher_info heure_piste;
+  let nombre_parkings = Parking.nombre_parkings_differents vols_piste_26L in
+  Printf.printf "Nombre de parkings différents : %d\n" nombre_parkings;
+  let liste_parkings = Parking.liste_parking_differents vols_piste_26L in
+  let hash_table = Parking.ParkingHashtbl.create nombre_parkings in
+  Parking.remplir_hashtbl vols_piste_26L liste_parkings hash_table;
+  Parking.afficher_hashtbl hash_table;
