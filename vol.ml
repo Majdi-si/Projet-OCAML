@@ -1,3 +1,5 @@
+type interval = { mutable lower: int; mutable upper: int }
+
 type t = {
   type_vol : string;
   indicatif : string;
@@ -12,6 +14,7 @@ type t = {
   mutable ttot : int;
   mutable dman : int;
   mutable heure_parking : int;
+  mutable occupation_parking : interval;
 }
 
 (*Prgramme pour ouverture et lecture du fichier*)
@@ -50,7 +53,7 @@ let rec extraire_info fichier =
     let dman = 0 in
     let heure_parking = 0 in
     (* Créer un enregistrement avec les informations extraites *)
-    {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking} :: extraire_info fichier
+    {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking; occupation_parking = {lower = 0; upper = 0}} :: extraire_info fichier
   with
     (* Gérer la fin du fichier *)
     End_of_file -> []
@@ -64,7 +67,7 @@ let fermer_fichier fichier =
 (* Fonction pour afficher les informations d'un vol *)
 let rec afficher_info = function
   | [] -> ()
-  | {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking} :: vols ->
+  | {type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking; occupation_parking = {lower; upper}} :: vols ->
     Printf.printf "Type de vol : %s\n" type_vol;
     Printf.printf "Indicatif : %s\n" indicatif;
     Printf.printf "Turbulence : %s\n" turbulence;
@@ -78,6 +81,7 @@ let rec afficher_info = function
     Printf.printf "TTOT : %d\n" ttot;
     Printf.printf "DMAN : %d\n" dman;
     Printf.printf "Heure parking : %d\n" heure_parking;
+    Printf.printf "Occupation parking : %d-%d\n" lower upper;
     Printf.printf "\n";
     afficher_info vols
 

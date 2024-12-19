@@ -23,7 +23,7 @@ let rec extraire_info fichier tableau_ref =
       let dman = 0 in
       let heure_parking = 0 in
       (* Créer un enregistrement vol *)
-      let vol_info = {PF.type_vol = type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking} in
+      let vol_info = {PF.type_vol = type_vol; indicatif; turbulence; parking; qfu; heure_debut; heure_piste; creneau; points; etot; ttot; dman; heure_parking; occupation_parking = {PF.lower = 0; upper = 0}} in
       (* Ajouter l'enregistrement au tableau mutable *)
       tableau_ref := Array.append !tableau_ref [|vol_info|];
       (* Appel récursif pour traiter la ligne suivante *)

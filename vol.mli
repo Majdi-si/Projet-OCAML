@@ -1,3 +1,5 @@
+type interval = { mutable lower: int; mutable upper: int }
+
 type t = {
   type_vol : string;
   indicatif : string;
@@ -12,7 +14,9 @@ type t = {
   mutable ttot : int;
   mutable dman : int;
   mutable heure_parking : int;
+  mutable occupation_parking : interval;
 }
+
 val ouvrir_fichier : string -> in_channel
 val drop : int -> 'a list -> 'a list
 val extraire_info : in_channel -> t list

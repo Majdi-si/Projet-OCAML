@@ -2,12 +2,15 @@ module Vol = Vol
 
 let calculer_dman (vols : Vol.t list) : Vol.t list =
   List.map (fun (vol : Vol.t) -> 
-    let dman = 
-      let ttot = vol.ttot in
-      let nombre_points = List.length vol.points in
-      ttot - (5 * nombre_points) 
-    in
-    { vol with dman }   
+    if vol.type_vol = "DEP" then
+      let dman = 
+        let ttot = vol.ttot in
+        let nombre_points = List.length vol.points in
+        ttot - (5 * nombre_points) 
+      in
+      { vol with dman }
+    else
+      vol
   ) vols
 
 let calculer_heure_parking (vols : Vol.t list) : Vol.t list =
@@ -22,5 +25,3 @@ let calculer_heure_parking (vols : Vol.t list) : Vol.t list =
     else
       vol
   ) vols
-
-  

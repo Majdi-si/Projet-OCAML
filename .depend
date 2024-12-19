@@ -25,9 +25,11 @@ main.cmx : \
     Etot.cmx \
     dman.cmx
 parking.cmo : \
-    vol.cmi
+    vol.cmi \
+    dman.cmo
 parking.cmx : \
-    vol.cmx
+    vol.cmx \
+    dman.cmx
 test.cmo :
 test.cmx :
 ttot.cmo : \
