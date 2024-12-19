@@ -56,7 +56,7 @@ let retard_moyen_par_heure (vols : Vol.t list) =
   ) vols;
   Array.iteri (fun heure (total_retard, count) ->
     if count > 0 then
-      Printf.printf "Heure %02d: Retard moyen = %.2f\n" heure (float_of_int total_retard /. float_of_int count)
+      Printf.printf "Heure %02d: Retard moyen = %.2f minutes\n" heure (float_of_int total_retard /. float_of_int count /. 60.0)
     else
       Printf.printf "Heure %02d: Aucun vol\n" heure
   ) heures
@@ -66,6 +66,6 @@ let retard_moyen_global (vols : Vol.t list) =
     (acc_retard + (vol.ttot - vol.etot), acc_count + 1)
   ) (0, 0) vols in
   if count > 0 then
-    Printf.printf "Retard moyen global = %.2f\n" (float_of_int total_retard /. float_of_int count)
+    Printf.printf "Retard moyen global = %.2f minutes\n" (float_of_int total_retard /. float_of_int count /. 60.0)
   else
-    Printf.printf "Aucun vol\n";
+    Printf.printf "Aucun vol\n"

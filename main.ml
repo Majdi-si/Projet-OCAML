@@ -19,3 +19,4 @@ let () =
   let creneau = 15 in
   Ttot.nb_creneaux_rate ttot_26R creneau;*)
   Ttot.retard_moyen_par_heure vols_tries_26R;
+  Ttot.retard_moyen_global vols_tries_26R;
