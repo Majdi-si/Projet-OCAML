@@ -2,6 +2,7 @@ module Vol = Vol
 module Etot = Etot
 module Extraire = Extraire
 module Ttot = Ttot
+module Dman = Dman
 
 (* Fonction principale *)
 let () =
@@ -9,14 +10,8 @@ let () =
   let vols = Vol.extraire_info fichier in
   close_in fichier;
   let vols_avec_etot = Etot.calculer_etot vols in
-  let vols_piste_26R = Etot.dep_qfu vols_avec_etot "26R" in
-  let vols_piste_27L = Etot.dep_qfu vols_avec_etot "27L" in
-  let vols_tries_26R = Etot.tri_etot vols_piste_26R in
-  let vols_tries_27L = Etot.tri_etot vols_piste_27L in
-  let ttot_26R = Ttot.calculer_ttot vols_tries_26R in
-  Vol.afficher_info ttot_26R;
-  (*Ttot.calcul_retard ttot_26R;
-  let creneau = 15 in
-  Ttot.nb_creneaux_rate ttot_26R creneau;*)
-  Ttot.retard_moyen_par_heure vols_tries_26R;
-  Ttot.retard_moyen_global vols_tries_26R;
+  let vols_piste_26L = Etot.arr_qfu vols_avec_etot "26L" in
+  let dmans = Dman.calculer_dman vols_piste_26L in
+  Vol.afficher_info dmans;
+  let heure_piste = Dman.calculer_heure_parking dmans in
+  Vol.afficher_info heure_piste;

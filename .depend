@@ -2,8 +2,10 @@ Etot.cmo : \
     vol.cmi
 Etot.cmx : \
     vol.cmx
-dman.cmo :
-dman.cmx :
+dman.cmo : \
+    vol.cmi
+dman.cmx : \
+    vol.cmx
 extraire.cmo : \
     vol.cmi
 extraire.cmx : \
@@ -12,12 +14,18 @@ main.cmo : \
     vol.cmi \
     ttot.cmo \
     extraire.cmo \
-    Etot.cmo
+    Etot.cmo \
+    dman.cmo
 main.cmx : \
     vol.cmx \
     ttot.cmx \
     extraire.cmx \
-    Etot.cmx
+    Etot.cmx \
+    dman.cmx
+parking.cmo : \
+    vol.cmi
+parking.cmx : \
+    vol.cmx
 test.cmo :
 test.cmx :
 ttot.cmo : \

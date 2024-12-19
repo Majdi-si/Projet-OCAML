@@ -10,8 +10,8 @@ type t = {
   points : string list;
   mutable etot : int;
   mutable ttot : int;
-  (*mutable dman : int
-  mutable heure_parking : int*)
+  mutable dman : int;
+  mutable heure_parking : int;
 }
 val ouvrir_fichier : string -> in_channel
 val drop : int -> 'a list -> 'a list

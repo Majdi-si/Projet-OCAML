@@ -1,4 +1,4 @@
-SOURCES = vol.ml extraire.ml Etot.ml ttot.ml main.ml
+SOURCES = vol.ml extraire.ml Etot.ml ttot.ml dman.ml main.ml
 TARGET = main
 
 OCAMLC   = ocamlc -g

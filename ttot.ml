@@ -33,18 +33,18 @@ let calcul_retard (vols : Vol.t list) =
   ) 0 vols in
   Printf.printf "Total difference between TTOT and ETOT: %d\n" total_diff
 
-  let nb_creneaux_rate (vols : Vol.t list) (creneau : int) =
+  let nb_creneaux_rate (vols : Vol.t list) =
     let count = List.fold_left (fun acc (vol : Vol.t) ->
-      if vol.ttot > creneau + 600 then acc + 1 else acc
+      if vol.ttot > vol.etot + 600 then acc + 1 else acc
     ) 0 vols in
     Printf.printf "Nombre de créneaux ratés: %d\n" count;
     Printf.printf "Pourcentage de créneaux ratés: %.2f%%\n" (float_of_int count /. float_of_int (List.length vols) *. 100.0);
     Printf.printf "Vols ratés: ";
-      List.iter (fun (vol : Vol.t) ->
-        if vol.ttot > creneau + 600 then
+    List.iter (fun (vol : Vol.t) ->
+      if vol.ttot > vol.etot + 600 then
         Printf.printf "%s " vol.indicatif
-      ) vols;
-      Printf.printf "\n"
+    ) vols;
+    Printf.printf "\n"
 
 
 let retard_moyen_par_heure (vols : Vol.t list) =
