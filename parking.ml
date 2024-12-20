@@ -1,5 +1,6 @@
 module Vol = Vol
 module Dman = Dman
+
 module ParkingHashtbl = Hashtbl.Make(struct
   type t = string
   let equal = String.equal
@@ -35,9 +36,6 @@ let create_hashtbl_vide (nombre_parkings : int) : Vol.t list ParkingHashtbl.t =
   ParkingHashtbl.create nombre_parkings
 
 let remplir_hashtbl (vols : Vol.t list) (liste_parkings : string list) (ht : Vol.t list ParkingHashtbl.t) : unit =
-  List.iter (fun parking ->
-    ParkingHashtbl.add ht parking []
-  ) liste_parkings;
   List.iter (fun vol ->
     let parking = vol.Vol.parking in
     let vols_pour_parking = ParkingHashtbl.find ht parking in
