@@ -35,23 +35,28 @@ let afficher_liste_parkings (liste_parkings : string list) : unit =
 let create_hashtbl_vide (nombre_parkings : int) : Vol.t list ParkingHashtbl.t =
   ParkingHashtbl.create nombre_parkings
 
-let remplir_hashtbl (vols : Vol.t list) (liste_parkings : string list) (ht : Vol.t list ParkingHashtbl.t) : unit =
-  List.iter (fun parking ->
-    ParkingHashtbl.add ht parking []
-  ) liste_parkings;
+let remplir_hashtbl (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =
   List.iter (fun vol ->
+  if ParkingHashtbl.mem ht vol.Vol.parking then
     let parking = vol.Vol.parking in
     let vols_pour_parking = ParkingHashtbl.find ht parking in
     ParkingHashtbl.replace ht parking (vol :: vols_pour_parking)
+  else
+    let parking = vol.Vol.parking in
+    ParkingHashtbl.add ht parking [vol]
   ) vols
 
 
 
 let afficher_hashtbl (ht : Vol.t list ParkingHashtbl.t) : unit =
+  let total_vols = ref 0 in
   ParkingHashtbl.iter (fun parking vols ->
+    total_vols := !total_vols + List.length vols;
     Printf.printf "Parking: %s\n" parking;
+    Printf.printf "Nombre de vols pour ce parking: %d\n" (List.length vols);
     List.iter (fun vol -> Printf.printf "  %s\n" vol.Vol.indicatif) vols
-  ) ht
+  ) ht;
+  Printf.printf "Nombre total de vols: %d\n" !total_vols
 
 
 let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =
