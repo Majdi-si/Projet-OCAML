@@ -54,6 +54,13 @@ let afficher_hashtbl (ht : Vol.t list ParkingHashtbl.t) : unit =
   ) ht
 
 
+let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =
+  ParkingHashtbl.iter (fun parking vols ->
+    let vols_tries = List.sort (fun vol1 vol2 ->
+      compare vol1.Vol.occupation_parking.lower vol2.Vol.occupation_parking.lower
+    ) vols in
+    ParkingHashtbl.replace ht parking vols_tries
+  ) ht
 
 let calculer_intervalles_occupation (vols : Vol.t list) : unit =
   List.iter (fun (vol : Vol.t) ->
