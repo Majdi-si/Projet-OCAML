@@ -49,3 +49,6 @@ Séance 4 :
 8. Par parking: regarder qui occupe le parking quand afin de detecter les conflits (avec Hashtbl (equivalent dictionnaire ocaml))
 9. Utiliser la hashtable pour mettre la liste des vols pour chaque parking
 10. Faire un histogramme par heure pour les retards moyens, ...
+
+Séance 5:
+1. Hashtbl : regarder si le parking est déjà dans la liste avec Hashtbl.mem
