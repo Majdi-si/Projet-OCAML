@@ -35,17 +35,16 @@ let afficher_liste_parkings (liste_parkings : string list) : unit =
 let create_hashtbl_vide (nombre_parkings : int) : Vol.t list ParkingHashtbl.t =
   ParkingHashtbl.create nombre_parkings
 
+
 let remplir_hashtbl (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =
   List.iter (fun vol ->
-  if ParkingHashtbl.mem ht vol.Vol.parking then
     let parking = vol.Vol.parking in
-    let vols_pour_parking = ParkingHashtbl.find ht parking in
-    ParkingHashtbl.replace ht parking (vol :: vols_pour_parking)
-  else
-    let parking = vol.Vol.parking in
-    ParkingHashtbl.add ht parking [vol]
+    if ParkingHashtbl.mem ht parking then 
+      let vols_pour_parking = ParkingHashtbl.find ht parking in
+      ParkingHashtbl.replace ht parking (vol :: vols_pour_parking)
+    else
+      ParkingHashtbl.add ht parking [vol]
   ) vols
-
 
 
 let afficher_hashtbl (ht : Vol.t list ParkingHashtbl.t) : unit =
@@ -57,6 +56,18 @@ let afficher_hashtbl (ht : Vol.t list ParkingHashtbl.t) : unit =
     List.iter (fun vol -> Printf.printf "  %s\n" vol.Vol.indicatif) vols
   ) ht;
   Printf.printf "Nombre total de vols: %d\n" !total_vols
+
+let info_vol_par_parking (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =
+  ParkingHashtbl.iter (fun parking vols ->
+    Printf.printf "Parking: %s\n" parking;
+    List.iter (fun vol ->
+      Printf.printf "  Indicatif: %s\n" vol.Vol.indicatif;
+      Printf.printf "  Type de vol: %s\n" vol.Vol.type_vol;
+      Printf.printf "  Heure de début: %s\n" vol.Vol.heure_debut;
+      Printf.printf "  Heure de parking: %d\n" vol.Vol.heure_parking;
+      Printf.printf "  Occupation parking: [%d, %d]\n" vol.Vol.occupation_parking.lower vol.Vol.occupation_parking.upper
+    ) vols
+  ) ht
 
 
 let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : unit =

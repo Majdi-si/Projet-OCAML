@@ -12,7 +12,7 @@ let () =
   close_in fichier;
   let vols_avec_etot = Etot.calculer_etot vols in
   let vols_pistes_26R = Etot.dep_qfu vols_avec_etot "26R" in
-  let vols_pistes_27L = Etot.dep_qfu vols_avec_etot "267L" in
+  let vols_pistes_27L = Etot.dep_qfu vols_avec_etot "27L" in
   let vols_pistes_26L = Etot.arr_qfu vols_avec_etot "26L" in
   let vols_pistes_27R = Etot.arr_qfu vols_avec_etot "27R" in
   let tri_etot_26R = Etot.tri_etot vols_pistes_26R in
@@ -37,5 +37,8 @@ let () =
   Parking.remplir_hashtbl heure_parking_27L hashtbl_parkings;
   Parking.remplir_hashtbl heure_parking_27R hashtbl_parkings;
   Parking.afficher_hashtbl hashtbl_parkings;
-
-
+  let tous_vols = heure_parking_26L @ heure_parking_26R @ heure_parking_27L @ heure_parking_27R in
+  Parking.calculer_intervalles_occupation tous_vols;
+  Parking.tri_heure_debut tous_vols hashtbl_parkings;
+  Parking.info_vol_par_parking tous_vols hashtbl_parkings;
+  Parking.calcul_conflit_parking tous_vols hashtbl_parkings;

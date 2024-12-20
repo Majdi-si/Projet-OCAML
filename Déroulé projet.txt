@@ -51,8 +51,8 @@ Séance 4 :
 10. Faire un histogramme par heure pour les retards moyens, ...
 
 Séance 5:
-1. Hashtbl : regarder si le parking est déjà dans la liste avec Hashtbl.mem
-2. Hashtbl.iter (fun pkg vols -> Hashtbl.replace h pkg (list.sort cmp vols))
+1. Hashtbl : regarder si le parking est déjà dans la liste avec Hashtbl.mem -> ok
+2. Hashtbl.iter (fun pkg vols -> Hashtbl.replace h pkg (list.sort cmp vols)) -> ok
 3. faire fonction de comparaison cmp: vol1 -> vol2 -> int (<0 si <vol2;>0 si >vol2;=0) 
 let cmp vol1 vol2 = compare vol1.heure_parking vol2.heure_parking
 4. créer un fichier csv différent a chaque fois qui contient (mettre en nom du fichier csv les paramètres choisis)
