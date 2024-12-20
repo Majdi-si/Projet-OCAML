@@ -13,6 +13,7 @@ extraire.cmx : \
 main.cmo : \
     vol.cmi \
     ttot.cmo \
+    traitement_donnees.cmo \
     parking.cmo \
     extraire.cmo \
     Etot.cmo \
@@ -20,6 +21,7 @@ main.cmo : \
 main.cmx : \
     vol.cmx \
     ttot.cmx \
+    traitement_donnees.cmx \
     parking.cmx \
     extraire.cmx \
     Etot.cmx \
@@ -32,6 +34,10 @@ parking.cmx : \
     dman.cmx
 test.cmo :
 test.cmx :
+traitement_donnees.cmo : \
+    vol.cmi
+traitement_donnees.cmx : \
+    vol.cmx
 ttot.cmo : \
     vol.cmi \
     Etot.cmo

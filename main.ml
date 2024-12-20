@@ -4,6 +4,7 @@ module Extraire = Extraire
 module Ttot = Ttot
 module Dman = Dman
 module Parking = Parking
+module Traitement_donnees = Traitement_donnees
 
 (* Fonction principale *)
 let () =
@@ -42,3 +43,4 @@ let () =
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
   Parking.info_vol_par_parking tous_vols hashtbl_parkings;
   Parking.calcul_conflit_parking tous_vols hashtbl_parkings;
+  Traitement_donnee.ecrire_statistiques_par_heure_csv tous_vols "statistiques_par_heure.csv"

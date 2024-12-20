@@ -53,10 +53,10 @@ Séance 4 :
 Séance 5:
 1. Hashtbl : regarder si le parking est déjà dans la liste avec Hashtbl.mem -> ok
 2. Hashtbl.iter (fun pkg vols -> Hashtbl.replace h pkg (list.sort cmp vols)) -> ok
-3. faire fonction de comparaison cmp: vol1 -> vol2 -> int (<0 si <vol2;>0 si >vol2;=0) 
-let cmp vol1 vol2 = compare vol1.heure_parking vol2.heure_parking
+3. faire fonction de comparaison cmp: vol1 -> vol2 -> int (<0 si <vol2;>0 si >vol2;=0) -> ok
+let cmp vol1 vol2 = compare vol1.heure_parking vol2.heure_parking -> ok
 4. créer un fichier csv différent a chaque fois qui contient (mettre en nom du fichier csv les paramètres choisis)
-heure retard Nb_conflit_parking Nb_crénaux_ratés
+heure NB_vols retard Nb_conflit_parking Nb_crénaux_ratés
 0
 1
 2
