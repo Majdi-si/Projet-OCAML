@@ -114,3 +114,24 @@ let calcul_conflit_parking (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t
     let total_conflicts = count_conflicts 0 vols in
     Printf.printf "Parking: %s, Conflits: %d\n" parking total_conflicts
   ) ht
+
+let count_conflicts (vols : Vol.t list) : int =
+  let ht = create_hashtbl_vide (nombre_parkings_differents vols) in
+  remplir_hashtbl vols ht;
+  let total_conflicts = ref 0 in
+  ParkingHashtbl.iter (fun _ vols_parking ->
+    let rec count_conflicts_in_list acc = function
+      | [] -> acc
+      | vol1 :: rest ->
+        let conflicts = List.fold_left (fun count vol2 ->
+          if vol1 != vol2 &&
+             vol1.Vol.occupation_parking.lower < vol2.Vol.occupation_parking.upper &&
+             vol1.Vol.occupation_parking.upper > vol2.Vol.occupation_parking.lower
+          then count + 1
+          else count
+        ) 0 rest in
+        count_conflicts_in_list (acc + conflicts) rest
+    in
+    total_conflicts := !total_conflicts + count_conflicts_in_list 0 vols_parking
+  ) ht;
+  !total_conflicts

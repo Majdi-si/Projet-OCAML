@@ -25,7 +25,7 @@ let nb_vols_par_heure (vols : Vol.t list) =
   ) vols;
   heures
 
-let ecrire_statistiques_par_heure_csv (vols : Vol.t list) (nom_fichier : string) =
+let ecrire_statistiques_par_heure_csv (vols : Vol.t list) (hashtbl_parkings : Vol.t list Parking.ParkingHashtbl.t) (nom_fichier : string)  =
   let nb_vols = nb_vols_par_heure vols in
   let nb_creneaux_rates = nb_creneaux_rates_par_heure vols in
   let heures = Array.make 24 (0, 0, 0, 0) in
@@ -35,19 +35,13 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list) (nom_fichier : string)
     heures.(heure) <- (total_retard + (vol.ttot - vol.etot), count + 1, 0, nb_creneaux_rates.(heure))
   ) vols;
   
-  (* Créez une hashtable et ajoutez-y les vols *)
-  let hashtbl_parkings = Parking.ParkingHashtbl.create (List.length vols) in
-  Parking.remplir_hashtbl vols hashtbl_parkings;
-  
-  (* Appelez Parking.calcul_conflit_parking avec la hashtable *)
-  Parking.calcul_conflit_parking vols hashtbl_parkings;
-  
   (* Mettez à jour les conflits de parking dans le tableau heures *)
   Parking.ParkingHashtbl.iter (fun _ vols_parking ->
     List.iter (fun (vol : Vol.t) ->
       let heure = vol.etot / 3600 in
       let (total_retard, count, conflits_parking, creneaux_rates) = heures.(heure) in
-      heures.(heure) <- (total_retard, count, conflits_parking + 1, creneaux_rates)
+      let total_conflicts = Parking.count_conflicts vols_parking in
+      heures.(heure) <- (total_retard, count, conflits_parking + total_conflicts, creneaux_rates)
     ) vols_parking
   ) hashtbl_parkings;
   
