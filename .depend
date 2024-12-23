@@ -34,10 +34,8 @@ parking.cmx : \
     dman.cmx
 test.cmo :
 test.cmx :
-traitement_donnees.cmo : \
-    vol.cmi
-traitement_donnees.cmx : \
-    vol.cmx
+traitement_donnees.cmo :
+traitement_donnees.cmx :
 ttot.cmo : \
     vol.cmi \
     Etot.cmo
