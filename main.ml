@@ -42,5 +42,5 @@ let () =
   Parking.calculer_intervalles_occupation tous_vols;
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
   Parking.info_vol_par_parking tous_vols hashtbl_parkings;
-  Parking.calcul_conflit_parking tous_vols hashtbl_parkings;
-  Traitement_donnee.ecrire_statistiques_par_heure_csv tous_vols "statistiques_par_heure.csv"
+  (*Parking.calcul_conflit_parking tous_vols hashtbl_parkings;*)
+  Traitement_donnees.ecrire_statistiques_par_heure_csv tous_vols "statistiques_par_heure.csv"
