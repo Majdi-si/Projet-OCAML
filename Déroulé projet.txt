@@ -60,6 +60,6 @@ heure NB_vols retard Nb_conflit_parking Nb_crénaux_ratés
 0
 1
 2
-etc
+etc --> ok
 5. demander des paramètres en entée (genre le temps au parking etc)
 6. chercher algorithme pour trouver la séquence optimale
