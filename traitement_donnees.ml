@@ -46,11 +46,11 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list) (hashtbl_parkings : Vo
   ) hashtbl_parkings;
   
   let fichier = open_out nom_fichier in
-  Printf.fprintf fichier "Heure,NB_vols,Retard moyen (minutes),Nb_conflits_parking,Nb_creneaux_rates\n";
+  Printf.fprintf fichier "Heure,NB_vols,Retard moyen (minutes),Retard total (minutes),Nb_conflits_parking,Nb_creneaux_rates\n";
   Array.iteri (fun heure (total_retard, count, conflits_parking, creneaux_rates) ->
     if count > 0 then
-      Printf.fprintf fichier "%02d,%d,%.2f,%d,%d\n" heure nb_vols.(heure) (float_of_int total_retard /. float_of_int count /. 60.0) conflits_parking creneaux_rates
+      Printf.fprintf fichier "%02d,%d,%.2f,%d,%d,%d\n" heure nb_vols.(heure) (float_of_int total_retard /. float_of_int count /. 60.0) (total_retard / 60) conflits_parking creneaux_rates
     else
-      Printf.fprintf fichier "%02d,%d,Aucun vol,%d,%d\n" heure nb_vols.(heure) conflits_parking creneaux_rates
+      Printf.fprintf fichier "%02d,%d,Aucun vol,0,%d,%d\n" heure nb_vols.(heure) conflits_parking creneaux_rates
   ) heures;
   close_out fichier
