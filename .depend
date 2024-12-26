@@ -15,6 +15,7 @@ main.cmo : \
     ttot.cmo \
     traitement_donnees.cmo \
     parking.cmo \
+    optimisation.cmo \
     extraire.cmo \
     Etot.cmo \
     dman.cmo
@@ -23,9 +24,16 @@ main.cmx : \
     ttot.cmx \
     traitement_donnees.cmx \
     parking.cmx \
+    optimisation.cmx \
     extraire.cmx \
     Etot.cmx \
     dman.cmx
+optimisation.cmo : \
+    vol.cmi \
+    ttot.cmo
+optimisation.cmx : \
+    vol.cmx \
+    ttot.cmx
 parking.cmo : \
     vol.cmi \
     dman.cmo

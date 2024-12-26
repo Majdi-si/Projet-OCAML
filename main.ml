@@ -5,6 +5,7 @@ module Ttot = Ttot
 module Dman = Dman
 module Parking = Parking
 module Traitement_donnees = Traitement_donnees
+module Optimisation = Optimisation
 
 (* Fonction principale *)
 let () =
@@ -41,7 +42,8 @@ let () =
   let tous_vols = heure_parking_26L @ heure_parking_26R @ heure_parking_27L @ heure_parking_27R in
   Parking.calculer_intervalles_occupation tous_vols;
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
-  Parking.info_vol_par_parking tous_vols hashtbl_parkings;
+  (*Parking.info_vol_par_parking tous_vols hashtbl_parkings;*)
   (*Parking.calcul_conflit_parking tous_vols hashtbl_parkings;*)
   Traitement_donnees.ecrire_statistiques_par_heure_csv tous_vols hashtbl_parkings "statistiques_par_heure.csv";
-  Ttot.nb_creneaux_rate tous_vols;
+  let sequence_optimale = Optimisation.optimiser_sequence tous_vols in
+  Optimisation.afficher_sequence sequence_optimale;
