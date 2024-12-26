@@ -28,12 +28,18 @@ let grouper_par_categorie (vols : Vol.t list) =
 (* Fonction principale récursive d'exploration *)
 let optimiser_sequence (vols : Vol.t list) =
   let best = ref { vols = []; cout = max_int } in
+  let max_iterations = 1000000 in (* Ajouter une limite *)
+  let iteration_count = ref 0 in
   
   let rec explorer seq cout reste =
-    if cout < !best.cout then
+    if !iteration_count >= max_iterations then
+      Printf.printf "Limite d'itérations atteinte\n"
+    else if cout < !best.cout then (
+      incr iteration_count;
       match reste with
       | [] -> 
-          best := { vols = seq; cout = cout }
+          best := { vols = seq; cout = cout };
+          Printf.printf "Nouvelle meilleure solution trouvée: coût %d\n" cout
       | _ ->
           let categories = grouper_par_categorie reste in
           Hashtbl.iter (fun _ cat_vols ->
@@ -43,15 +49,18 @@ let optimiser_sequence (vols : Vol.t list) =
                 let reste_r = List.filter ((<>) vol) reste in
                 let cout_r = calculer_retard vol seq in
                 let seq_r = seq @ [vol] in
-                explorer seq_r (cout + cout_r) reste_r
+                if cout + cout_r < !best.cout then (* Élagage *)
+                  explorer seq_r (cout + cout_r) reste_r
           ) categories
+    )
   in
 
-(* Démarrer l'exploration avec la liste triée par ETOT *)
-let vols_tries = List.sort (fun v1 v2 -> compare v1.Vol.etot v2.Vol.etot) vols in
-explorer [] 0 vols_tries;
-!best
-
+  (* Ne traiter que les vols de départ *)
+  let vols_depart = List.filter (fun v -> v.Vol.type_vol = "DEP") vols in
+  let vols_tries = List.sort (fun v1 v2 -> compare v1.Vol.etot v2.Vol.etot) vols_depart in
+  Printf.printf "Optimisation de %d vols de départ...\n" (List.length vols_tries);
+  explorer [] 0 vols_tries;
+  !best
 (* Fonction pour afficher la séquence optimisée *)
 let afficher_sequence (seq : sequence) =
   Printf.printf "Séquence optimisée (coût total: %d):\n" seq.cout;

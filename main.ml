@@ -7,6 +7,7 @@ module Parking = Parking
 module Traitement_donnees = Traitement_donnees
 module Optimisation = Optimisation
 
+
 (* Fonction principale *)
 let () =
   let fichier = open_in "data/lfpg_flights.txt" in
@@ -42,8 +43,37 @@ let () =
   let tous_vols = heure_parking_26L @ heure_parking_26R @ heure_parking_27L @ heure_parking_27R in
   Parking.calculer_intervalles_occupation tous_vols;
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
-  (*Parking.info_vol_par_parking tous_vols hashtbl_parkings;*)
-  (*Parking.calcul_conflit_parking tous_vols hashtbl_parkings;*)
   Traitement_donnees.ecrire_statistiques_par_heure_csv tous_vols hashtbl_parkings "statistiques_par_heure.csv";
-  let sequence_optimale = Optimisation.optimiser_sequence tous_vols in
-  Optimisation.afficher_sequence sequence_optimale;
+  
+
+(* Afficher le nombre total d'avions dans la liste tous_vols *)
+Printf.printf "Nombre total de vols : %d\n" (List.length vols);
+Printf.printf "Nombre de départs 26R : %d\n" (List.length vols_pistes_26R);
+Printf.printf "Nombre de départs 27L : %d\n" (List.length vols_pistes_27L);
+  (* Demander l'heure à optimiser *)
+  Printf.printf "Entrez l'heure à optimiser (0-23): ";
+  let heure_a_optimiser = read_int () in
+  
+  (* Filtrer les vols de départ de l'heure choisie *)
+  let vols_heure = List.filter (fun v -> 
+    let heure = v.Vol.etot / 3600 in
+    heure = heure_a_optimiser && v.Vol.type_vol = "DEP"
+  ) tous_vols in
+  
+  if List.length vols_heure = 0 then
+    Printf.printf "Aucun vol de départ à optimiser pour l'heure %d\n" heure_a_optimiser
+  else (
+    Printf.printf "Optimisation des séquences de départ pour l'heure %d (%d départs)...\n" 
+      heure_a_optimiser (List.length vols_heure);
+    let sequence_optimale = Optimisation.optimiser_sequence vols_heure in
+    Printf.printf "Affichage de la séquence optimale pour l'heure %d :\n" heure_a_optimiser;
+    Optimisation.afficher_sequence sequence_optimale;
+    
+    Printf.printf "\nStatistiques des départs pour l'heure %d:\n" heure_a_optimiser;
+    Printf.printf "Nombre de départs : %d\n" (List.length vols_heure);
+    let retard_total = sequence_optimale.cout in
+    Printf.printf "Retard total : %d secondes (%.2f minutes)\n" 
+      retard_total (float_of_int retard_total /. 60.0);
+    Printf.printf "Retard moyen : %.2f minutes\n" 
+      (float_of_int retard_total /. float_of_int (List.length vols_heure) /. 60.0)
+  )
