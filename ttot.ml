@@ -1,15 +1,16 @@
 module Etot = Etot
 module Vol = Vol
 open Printf
-
+module Params = Parametre.Params
 
 type category = L | M | H
 
 let separation_time cat1 cat2 =
+  let (sep1, sep2, sep3) = Params.get_separation_times() in
   match (cat1, cat2) with
-  | ("M", "L") | ("H", "L") | ("H", "M") -> 180
-  | ("H", "H") -> 120
-  | _ -> 60
+  | ("M", "L") | ("H", "L") | ("H", "M") -> sep1
+  | ("H", "H") -> sep2
+  | _ -> sep3
 
   let calculer_ttot (vols : Vol.t list) : Vol.t list =
     let rec aux (vols : Vol.t list) (last : Vol.t option) : unit =

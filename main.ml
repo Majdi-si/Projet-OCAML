@@ -6,6 +6,7 @@ module Dman = Dman
 module Parking = Parking
 module Traitement_donnees = Traitement_donnees
 module Optimisation = Optimisation
+module Params = Parametre.Params
 
 
 (* Fonction principale *)
@@ -13,6 +14,15 @@ let () =
   let fichier = open_in "data/lfpg_flights.txt" in
   let vols = Vol.extraire_info fichier in
   close_in fichier;
+
+  let parking_time = Params.get_parking_time () in
+  let (sep_1, sep_2, sep_3) = Params.get_separation_times () in
+  Printf.printf "Temps d'occupation d'un parking: %d minutes\n" (parking_time / 60);
+  Printf.printf "Temps de séparation ('M', 'L') | ('H', 'L') | ('H', 'M'): %d minutes\n" (sep_1 / 60);
+  Printf.printf "Temps de séparation ('H', 'H'): %d minutes\n" (sep_2 / 60);
+  Printf.printf "Temps de séparation pour le reste: %d minutes\n" (sep_3 / 60);
+
+
   let vols_avec_etot = Etot.calculer_etot vols in
   let vols_pistes_26R = Etot.dep_qfu vols_avec_etot "26R" in
   let vols_pistes_27L = Etot.dep_qfu vols_avec_etot "27L" in
@@ -39,10 +49,11 @@ let () =
   Parking.remplir_hashtbl heure_parking_26R hashtbl_parkings;
   Parking.remplir_hashtbl heure_parking_27L hashtbl_parkings;
   Parking.remplir_hashtbl heure_parking_27R hashtbl_parkings;
-  Parking.afficher_hashtbl hashtbl_parkings;
+  (*Parking.afficher_hashtbl hashtbl_parkings;*)
   let tous_vols = heure_parking_26L @ heure_parking_26R @ heure_parking_27L @ heure_parking_27R in
   Parking.calculer_intervalles_occupation tous_vols;
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
+  Printf.printf "Affichage des informations des vols par parking:\n";
   Traitement_donnees.ecrire_statistiques_par_heure_csv tous_vols hashtbl_parkings "statistiques_par_heure.csv";
   
 

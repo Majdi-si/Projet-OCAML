@@ -4,11 +4,11 @@ module Parking = Parking
 let nb_creneaux_rates_par_heure (vols : Vol.t list) =
   let heures = Array.make 24 0 in
   List.iter (fun (vol : Vol.t) ->
-    Printf.printf "Vol %d %d\n" vol.etot vol.ttot;
+    (*Printf.printf "Vol %d %d\n" vol.etot vol.ttot;*)
     if vol.ttot > vol.etot + 600 && vol.type_vol = "DEP" then 
     let heure = vol.etot / 3600 in
       heures.(heure) <- heures.(heure) + 1;
-      Printf.printf "Vol %s rate le créneau horaire\n" vol.indicatif
+      (*Printf.printf "Vol %s rate le créneau horaire\n" vol.indicatif*)
   ) vols;
   heures
 

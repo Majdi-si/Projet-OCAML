@@ -1,5 +1,6 @@
 module Vol = Vol
 module Dman = Dman
+module Params = Parametre.Params
 
 module ParkingHashtbl = Hashtbl.Make(struct
   type t = string
@@ -80,11 +81,12 @@ let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : uni
 
 let calculer_intervalles_occupation (vols : Vol.t list) : unit =
   List.iter (fun (vol : Vol.t) ->
+    let parking_time = Params.get_parking_time () in
     if vol.type_vol = "ARR" then
-      vol.occupation_parking <- { lower = vol.heure_parking; upper = vol.heure_parking + 15 }
+      vol.occupation_parking <- { lower = vol.heure_parking; upper = vol.heure_parking + parking_time }
     else if vol.type_vol = "DEP" then
       let heure_debut_int = int_of_string vol.heure_debut in
-      vol.occupation_parking <- { lower = heure_debut_int - 15; upper = vol.dman }
+      vol.occupation_parking <- { lower = heure_debut_int - parking_time; upper = vol.dman }
     else
       vol.occupation_parking <- { lower = 0; upper = 0 }
   ) vols

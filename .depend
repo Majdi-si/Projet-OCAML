@@ -15,6 +15,7 @@ main.cmo : \
     ttot.cmo \
     traitement_donnees.cmo \
     parking.cmo \
+    parametre.cmo \
     optimisation.cmo \
     extraire.cmo \
     Etot.cmo \
@@ -24,6 +25,7 @@ main.cmx : \
     ttot.cmx \
     traitement_donnees.cmx \
     parking.cmx \
+    parametre.cmx \
     optimisation.cmx \
     extraire.cmx \
     Etot.cmx \
@@ -34,11 +36,15 @@ optimisation.cmo : \
 optimisation.cmx : \
     vol.cmx \
     ttot.cmx
+parametre.cmo :
+parametre.cmx :
 parking.cmo : \
     vol.cmi \
+    parametre.cmo \
     dman.cmo
 parking.cmx : \
     vol.cmx \
+    parametre.cmx \
     dman.cmx
 test.cmo :
 test.cmx :
@@ -50,9 +56,11 @@ traitement_donnees.cmx : \
     parking.cmx
 ttot.cmo : \
     vol.cmi \
+    parametre.cmo \
     Etot.cmo
 ttot.cmx : \
     vol.cmx \
+    parametre.cmx \
     Etot.cmx
 vol.cmo : \
     vol.cmi

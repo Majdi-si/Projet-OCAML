@@ -1,4 +1,4 @@
-SOURCES = vol.ml extraire.ml Etot.ml ttot.ml dman.ml parking.ml traitement_donnees.ml optimisation.ml main.ml
+SOURCES = parametre.ml vol.ml extraire.ml Etot.ml ttot.ml dman.ml parking.ml traitement_donnees.ml optimisation.ml main.ml
 TARGET = main
 
 OCAMLC   = ocamlc -g
