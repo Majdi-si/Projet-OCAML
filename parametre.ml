@@ -16,13 +16,14 @@ let () =
   print_string "Entrez le temps d'occupation d'un parking (int) : ";
   let park_time = read_int () in
 
-  print_string "Entrez le temps de separation ("M", "L") | ("H", "L") | ("H", "M"): ";
+  print_string "Entrez le temps de separation ('M', 'L') | ('H', 'L') | ('H', 'M'): ";
   let sep_1 = read_int () in
-  print_string "Entrez le temps de separation ("H", "H"): ";
+  print_string "Entrez le temps de separation ('H', 'H'): ";
   let sep_2 = read_int () in
   print_string "Entrez le temps de separation pour le reste : ";
   let sep_3 = read_int () in
 
   (* Créer la structure de configuration *)
-  let config = Params.create_config park_time (sep_1, sep_2, sep_3) 
+  let config = Params.create_config park_time (sep_1, sep_2, sep_3) in
   
+  ()
