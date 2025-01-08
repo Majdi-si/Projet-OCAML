@@ -65,10 +65,14 @@ Printf.printf "Nombre de départs 27L : %d\n" (List.length vols_pistes_27L);
   Printf.printf "Entrez l'heure à optimiser (0-23): ";
   let heure_a_optimiser = read_int () in
   
+  Printf.printf "Choisissez une pistes de départ à optimiser (26R, 27L): ";
+  let piste_a_optimiser = read_line () in
+
+  
   (* Filtrer les vols de départ de l'heure choisie *)
   let vols_heure = List.filter (fun v -> 
     let heure = v.Vol.etot / 3600 in
-    heure = heure_a_optimiser && v.Vol.type_vol = "DEP"
+    heure = heure_a_optimiser && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste_a_optimiser
   ) tous_vols in
   
   if List.length vols_heure = 0 then
