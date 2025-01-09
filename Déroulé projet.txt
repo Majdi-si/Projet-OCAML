@@ -63,3 +63,9 @@ heure NB_vols retard Nb_conflit_parking Nb_crénaux_ratés
 etc --> ok
 5. demander des paramètres en entée (genre le temps au parking etc)
 6. chercher algorithme pour trouver la séquence optimale -> ok
+
+
+Séance 6 : 
+1. Propager le retard en prenant le dernier vol de la séquence précédente
+2. Mettre etot = ttot à chaque vol avant optimisation
+3. Résoudre nombre de conflits de parking
