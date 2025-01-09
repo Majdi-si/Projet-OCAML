@@ -55,7 +55,7 @@ let () =
   Parking.tri_heure_debut tous_vols hashtbl_parkings;
   Printf.printf "Affichage des informations des vols par parking:\n";
   Traitement_donnees.ecrire_statistiques_par_heure_csv tous_vols hashtbl_parkings "statistiques_par_heure.csv";
-  
+
 
 (* Afficher le nombre total d'avions dans la liste tous_vols *)
 Printf.printf "Nombre total de vols : %d\n" (List.length vols);
