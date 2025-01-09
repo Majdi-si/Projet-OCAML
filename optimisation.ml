@@ -1,6 +1,5 @@
 module Vol = Vol
 
-(* Type pour représenter une séquence optimisée *)
 type sequence = {
   vols : Vol.t list;
   cout : int;
@@ -9,15 +8,25 @@ type sequence = {
 (* Fonction pour calculer le retard d'un vol placé après une séquence *)
 let calculer_retard (vol : Vol.t) (seq : Vol.t list) =
   match List.rev seq with
-  | [] -> max 0 (vol.Vol.ttot - vol.Vol.etot)  (* Pas de vol précédent *)
+  | [] -> max 0 (vol.Vol.ttot - vol.Vol.etot)  
   | dernier :: _ ->
       let separation = Ttot.separation_time dernier.Vol.turbulence vol.Vol.turbulence in
       let nouveau_ttot = max vol.Vol.etot (dernier.Vol.ttot + separation) in
       nouveau_ttot - vol.Vol.etot
 
-(* Fonction pour regrouper les vols par catégorie de turbulence *)
+(* Fonction pour calculer le retard total d'une séquence *)
+let calcul_retard_total (vols : Vol.t list) =
+  let rec aux acc sequence = function
+    | [] -> acc
+    | vol :: reste ->
+        let retard = calculer_retard vol sequence in
+        aux (acc + retard) (sequence @ [vol]) reste
+  in
+  aux 0 [] vols
+
+(* Fonction pour regrouper les vols par catégorie *)
 let grouper_par_categorie (vols : Vol.t list) =
-  let categories = Hashtbl.create 3 in (* H, M, L *)
+  let categories = Hashtbl.create 3 in 
   List.iter (fun vol ->
     let cat_vols = try Hashtbl.find categories vol.Vol.turbulence 
                    with Not_found -> [] in
@@ -25,10 +34,10 @@ let grouper_par_categorie (vols : Vol.t list) =
   ) vols;
   categories
 
-(* Fonction principale récursive d'exploration *)
+(* Fonction principale d'optimisation *)
 let optimiser_sequence (vols : Vol.t list) =
-  let best = ref { vols = []; cout = max_int } in
-  let max_iterations = 1000000 in (* Ajouter une limite *)
+  let best = ref { vols = vols; cout = calcul_retard_total vols } in
+  let max_iterations = 1000000 in
   let iteration_count = ref 0 in
   
   let rec explorer seq cout reste =
@@ -55,13 +64,12 @@ let optimiser_sequence (vols : Vol.t list) =
     )
   in
 
-  (* Ne traiter que les vols de départ *)
   let vols_depart = List.filter (fun v -> v.Vol.type_vol = "DEP") vols in
   let vols_tries = List.sort (fun v1 v2 -> compare v1.Vol.etot v2.Vol.etot) vols_depart in
   Printf.printf "Optimisation de %d vols de départ...\n" (List.length vols_tries);
   explorer [] 0 vols_tries;
   !best
-(* Fonction pour afficher la séquence optimisée *)
+
 let afficher_sequence (seq : sequence) =
   Printf.printf "Séquence optimisée (coût total: %d):\n" seq.cout;
   List.iter (fun vol ->
