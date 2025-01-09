@@ -49,7 +49,7 @@ let optimiser_sequence (vols : Vol.t list) =
                 let reste_r = List.filter ((<>) vol) reste in
                 let cout_r = calculer_retard vol seq in
                 let seq_r = seq @ [vol] in
-                if cout + cout_r < !best.cout then (* Élagage *)
+                if cout + cout_r < !best.cout then 
                   explorer seq_r (cout + cout_r) reste_r
           ) categories
     )
