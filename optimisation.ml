@@ -78,3 +78,74 @@ let afficher_sequence (seq : sequence) =
     Printf.printf "Vol %s (cat: %s, ETOT: %d)\n" 
       vol.Vol.indicatif vol.Vol.turbulence vol.Vol.etot
   ) seq.vols
+
+let optimiser_jusqu_a_heure vols heure_cible piste =
+  let dernier_vol = ref None in
+  let resultat = ref None in
+  
+  for h = 0 to heure_cible do
+    let vols_heure = List.filter (fun v -> 
+      let heure = v.Vol.etot / 3600 in
+      heure = h && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste
+    ) vols in
+    
+    if List.length vols_heure > 0 then begin
+      Printf.printf "\nOptimisation de l'heure %d...\n" h;
+      
+      (match !dernier_vol with
+      | Some last_vol -> 
+          List.iter (fun v -> 
+            let separation = Ttot.separation_time last_vol.Vol.turbulence v.Vol.turbulence in
+            v.Vol.etot <- max v.Vol.etot (last_vol.Vol.ttot + separation)
+          ) vols_heure
+      | None -> ());
+
+      let sequence = optimiser_sequence vols_heure in
+      dernier_vol := Some (List.hd (List.rev sequence.vols));
+      
+      if h = heure_cible then
+        resultat := Some sequence
+      else
+        Printf.printf "Retard propagé: %d secondes\n" 
+          (match !dernier_vol with Some v -> v.Vol.ttot - v.Vol.etot | None -> 0)
+    end
+  done;
+  !resultat
+
+let optimiser_piste vols piste =
+  let resultats = Array.make 24 None in
+  for h = 0 to 23 do
+    let resultat = optimiser_jusqu_a_heure vols h piste in
+    resultats.(h) <- resultat
+  done;
+  resultats
+
+let afficher_resultats_piste piste resultats =
+  Printf.printf "\n=== Résultats pour la piste %s ===\n" piste;
+  Array.iteri (fun h res ->
+    match res with
+    | Some sequence -> 
+        Printf.printf "\nHeure %d:\n" h;
+        Printf.printf "Nombre de départs : %d\n" (List.length sequence.vols);
+        Printf.printf "Retard total : %.2f minutes\n" 
+          (float_of_int sequence.cout /. 60.0);
+        Printf.printf "Retard moyen : %.2f minutes\n" 
+          (float_of_int sequence.cout /. float_of_int (List.length sequence.vols) /. 60.0)
+    | None -> 
+        Printf.printf "\nHeure %d: Aucun vol\n" h
+  ) resultats
+
+let afficher_resultats_sequence resultat =
+  match resultat with
+  | Some sequence -> 
+      Printf.printf "\nSéquence optimisée:\n";
+      Printf.printf "Nombre de vols : %d\n" (List.length sequence.vols);
+      Printf.printf "Retard total : %.2f minutes\n" (float_of_int sequence.cout /. 60.0);
+      Printf.printf "Retard moyen : %.2f minutes\n" 
+        (float_of_int sequence.cout /. float_of_int (List.length sequence.vols) /. 60.0);
+      List.iter (fun vol ->
+        Printf.printf "Vol %s (cat: %s) - ETOT: %d, TTOT: %d\n"
+          vol.Vol.indicatif vol.Vol.turbulence vol.Vol.etot vol.Vol.ttot
+      ) sequence.vols
+  | None -> 
+      Printf.printf "Aucune séquence optimisée disponible pour cette heure\n"
