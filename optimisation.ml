@@ -90,8 +90,7 @@ let optimiser_jusqu_a_heure vols heure_cible piste =
     ) vols in
     
     if List.length vols_heure > 0 then begin
-      Printf.printf "\nOptimisation de l'heure %d...\n" h;
-      
+      (* Mettre à jour les ETOT en fonction du dernier vol *)
       (match !dernier_vol with
       | Some last_vol -> 
           List.iter (fun v -> 
@@ -100,14 +99,19 @@ let optimiser_jusqu_a_heure vols heure_cible piste =
           ) vols_heure
       | None -> ());
 
+      (* Optimiser la séquence *)
       let sequence = optimiser_sequence vols_heure in
+      
+      (* Mettre à jour les TTOT après optimisation *)
+      List.iter (fun v ->
+        v.Vol.ttot <- v.Vol.etot
+      ) sequence.vols;
+      
+      (* Garder le dernier vol pour la prochaine heure *)
       dernier_vol := Some (List.hd (List.rev sequence.vols));
       
       if h = heure_cible then
         resultat := Some sequence
-      else
-        Printf.printf "Retard propagé: %d secondes\n" 
-          (match !dernier_vol with Some v -> v.Vol.ttot - v.Vol.etot | None -> 0)
     end
   done;
   !resultat

@@ -50,10 +50,12 @@ test.cmo :
 test.cmx :
 traitement_donnees.cmo : \
     vol.cmi \
-    parking.cmo
+    parking.cmo \
+    optimisation.cmo
 traitement_donnees.cmx : \
     vol.cmx \
-    parking.cmx
+    parking.cmx \
+    optimisation.cmx
 ttot.cmo : \
     vol.cmi \
     parametre.cmo \
