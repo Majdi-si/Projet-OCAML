@@ -57,7 +57,6 @@ let optimiser_sequence (vols : Vol.t list) =
           Hashtbl.iter (fun _ vol ->
                 let reste_r = List.filter ((<>) vol) reste in
                 let cout_r = calculer_retard vol seq in
-                Printf.printf "cout_r=%d\n" cout_r;
                 let seq_r = vol :: seq in
                 vol.ttot <- vol.etot + cout_r;
                 explorer seq_r (cout + cout_r) reste_r;

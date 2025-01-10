@@ -8,6 +8,66 @@ module Traitement_donnees = Traitement_donnees
 module Optimisation = Optimisation
 module Params = Parametre.Params
 
+let optimiser_jusqu_a_heure vols heure_cible piste =
+  let dernier_vol = ref None in
+  let resultat = ref None in
+  
+  (* On parcourt toutes les heures jusqu'à l'heure cible *)
+  for h = 0 to heure_cible do
+    let vols_heure = List.filter (fun v -> 
+      let heure = v.Vol.etot / 3600 in
+      heure = h && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste
+    ) vols in
+    
+    if List.length vols_heure > 0 then begin
+      Printf.printf "\nOptimisation de l'heure %d...\n" h;
+      
+      (match !dernier_vol with
+      | Some last_vol -> 
+          List.iter (fun v -> 
+            let separation = Ttot.separation_time last_vol.Vol.turbulence v.Vol.turbulence in
+            v.Vol.etot <- max v.Vol.etot (last_vol.Vol.ttot + separation)
+          ) vols_heure
+      | None -> ());
+
+      let sequence = Optimisation.optimiser_sequence vols_heure in
+      dernier_vol := Some (List.hd (List.rev sequence.vols));
+      
+      if h = heure_cible then
+        resultat := Some sequence
+      else
+        Printf.printf "Retard propagé: %d secondes\n" 
+          (match !dernier_vol with Some v -> v.Vol.ttot - v.Vol.etot | None -> 0)
+    end
+  done;
+  !resultat
+
+
+let optimiser_piste vols piste =
+  let resultats = Array.make 24 None in
+  for h = 0 to 23 do
+    let resultat = optimiser_jusqu_a_heure vols h piste in
+    resultats.(h) <- resultat
+  done;
+  resultats
+
+let afficher_resultats_piste piste resultats =
+  Printf.printf "\n=== Résultats pour la piste %s ===\n" piste;
+  Array.iteri (fun h res ->
+    match res with
+    | Some sequence -> 
+        Printf.printf "\nHeure %d:\n" h;
+        Printf.printf "Nombre de départs : %d\n" (List.length sequence.Optimisation.vols);
+        Printf.printf "Retard total : %.2f minutes\n" 
+          (float_of_int sequence.Optimisation.cout /. 60.0);
+        Printf.printf "Retard moyen : %.2f minutes\n" 
+          (float_of_int sequence.Optimisation.cout /. float_of_int (List.length sequence.Optimisation.vols) /. 60.0)
+    | None -> 
+        Printf.printf "\nHeure %d: Aucun vol\n" h
+  ) resultats
+
+
+
 
 (* Fonction principale *)
 let () =
@@ -61,34 +121,11 @@ let () =
 Printf.printf "Nombre total de vols : %d\n" (List.length vols);
 Printf.printf "Nombre de départs 26R : %d\n" (List.length vols_pistes_26R);
 Printf.printf "Nombre de départs 27L : %d\n" (List.length vols_pistes_27L);
-  (* Demander l'heure à optimiser *)
-  Printf.printf "Entrez l'heure à optimiser (0-23): ";
-  let heure_a_optimiser = read_int () in
-  
-  Printf.printf "Choisissez une pistes de départ à optimiser (26R, 27L): ";
-  let piste_a_optimiser = read_line () in
+(* Optimisation pour les deux pistes *)
+Printf.printf "\nDébut de l'optimisation...\n";
+let resultats_26R = optimiser_piste tous_vols "26R" in
+let resultats_27L = optimiser_piste tous_vols "27L" in
 
-  
-  (* Filtrer les vols de départ de l'heure choisie *)
-  let vols_heure = List.filter (fun v -> 
-    let heure = v.Vol.etot / 3600 in
-    heure = heure_a_optimiser && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste_a_optimiser
-  ) tous_vols in
-  
-  if List.length vols_heure = 0 then
-    Printf.printf "Aucun vol de départ à optimiser pour l'heure %d\n" heure_a_optimiser
-  else (
-    Printf.printf "Optimisation des séquences de départ pour l'heure %d (%d départs)...\n" 
-      heure_a_optimiser (List.length vols_heure);
-    let sequence_optimale = Optimisation.optimiser_sequence vols_heure in
-    Printf.printf "Affichage de la séquence optimale pour l'heure %d :\n" heure_a_optimiser;
-    Optimisation.afficher_sequence sequence_optimale;
-    
-    Printf.printf "\nStatistiques des départs pour l'heure %d:\n" heure_a_optimiser;
-    Printf.printf "Nombre de départs : %d\n" (List.length vols_heure);
-    let retard_total = sequence_optimale.cout in
-    Printf.printf "Retard total : %d secondes (%.2f minutes)\n" 
-      retard_total (float_of_int retard_total /. 60.0);
-    Printf.printf "Retard moyen : %.2f minutes\n" 
-      (float_of_int retard_total /. float_of_int (List.length vols_heure) /. 60.0)
-  )
+(* Affichage des résultats *)
+afficher_resultats_piste "26R" resultats_26R;
+afficher_resultats_piste "27L" resultats_27L
