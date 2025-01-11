@@ -51,7 +51,6 @@ let optimiser_sequence (vols : Vol.t list) =
       match reste with
       | [] -> 
           best := { vols = List.rev seq; cout = cout };
-          Printf.printf "Nouvelle meilleure solution trouvée: coût %d\n" cout
       | _ ->
           let categories = grouper_par_categorie reste in
           Hashtbl.iter (fun _ vol ->

@@ -84,12 +84,66 @@ let rec menu_principal tous_vols hashtbl_parkings =
     Printf.printf "Nouveau fichier chargé avec succès!\n";
     menu_principal nouveaux_tous_vols nouveau_hashtbl_parkings
       
-  | 7 -> (* Quitter *)
-      Printf.printf "Au revoir !\n"
-      
-  | _ ->
-      Printf.printf "Choix invalide\n";
-      menu_principal tous_vols hashtbl_parkings  
+  | 7 -> (* Statistiques par piste *)
+      Printf.printf "\n=== Statistiques par piste ===\n";
+      let (p26r, p27l, p26l, p27r) = List.fold_left (fun (a,b,c,d) vol ->
+        match vol.Vol.qfu with
+        | "26R" -> (a+1,b,c,d)
+        | "27L" -> (a,b+1,c,d)
+        | "26L" -> (a,b,c+1,d)
+        | "27R" -> (a,b,c,d+1)
+        | _ -> (a,b,c,d)
+      ) (0,0,0,0) tous_vols in
+      Printf.printf "26R (Départs) : %d vols\n" p26r;
+      Printf.printf "27L (Départs) : %d vols\n" p27l;
+      Printf.printf "26L (Arrivées) : %d vols\n" p26l;
+      Printf.printf "27R (Arrivées) : %d vols\n" p27r;
+      menu_principal tous_vols hashtbl_parkings
+
+  | 8 -> (* Analyser pics d'activité *)
+      Printf.printf "\n=== Pics d'activité ===\n";
+      let heures = Array.make 24 0 in
+      List.iter (fun vol ->
+        let heure = 
+          if vol.Vol.type_vol = "DEP" then 
+            vol.Vol.etot / 3600
+          else 
+            int_of_string vol.Vol.heure_debut / 3600 in
+        if heure >= 0 && heure < 24 then
+          heures.(heure) <- heures.(heure) + 1
+      ) tous_vols;
+      let max_vols = ref 0 in
+      let heure_pic = ref 0 in
+      Array.iteri (fun h nb ->
+        if nb > !max_vols then (
+          max_vols := nb;
+          heure_pic := h
+        );
+        Printf.printf "Heure %02d: %d vols\n" h nb
+      ) heures;
+      Printf.printf "\nPic d'activité à %02dh avec %d vols\n" !heure_pic !max_vols;
+      menu_principal tous_vols hashtbl_parkings
+
+  | 9 -> (* Statistiques par catégorie *)
+      Printf.printf "\n=== Statistiques par catégorie ===\n";
+      let cats = Hashtbl.create 3 in
+      List.iter (fun vol ->
+        let cat = vol.Vol.turbulence in
+        let count = try Hashtbl.find cats cat with Not_found -> 0 in
+        Hashtbl.replace cats cat (count + 1)
+      ) tous_vols;
+      Hashtbl.iter (fun cat count ->
+        Printf.printf "Catégorie %s: %d vols (%.1f%%)\n" 
+          cat count (100. *. float_of_int count /. float_of_int (List.length tous_vols))
+      ) cats;
+      menu_principal tous_vols hashtbl_parkings 
+    
+  | 10 -> (* Quitter *)
+      Printf.printf "Au revoir!\n"
+
+  | _ -> (* Choix invalide *)
+      Printf.printf "Choix invalide!\n";
+      menu_principal tous_vols hashtbl_parkings
 
 
   
@@ -129,7 +183,6 @@ let () =
   let heure_parking_26L = Dman.calculer_heure_parking dman_26L in
   let heure_parking_27R = Dman.calculer_heure_parking dman_27R in
   let nombre_parkings_differents = Parking.nombre_parkings_differents vols in
-  let liste_parking_differents = Parking.liste_parking_differents vols in
   let hashtbl_parkings = Parking.create_hashtbl_vide nombre_parkings_differents in
   Parking.remplir_hashtbl heure_parking_26L hashtbl_parkings;
   Parking.remplir_hashtbl heure_parking_26R hashtbl_parkings;

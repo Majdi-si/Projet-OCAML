@@ -43,7 +43,10 @@ module Params = struct
     print_string "4. Modifier paramètres\n";
     print_string "5. Afficher paramètres\n";
     print_string "6. Changer fichier de données\n";
-    print_string "7. Quitter\n";
+    print_string "7. Statistiques par piste\n";  
+    print_string "8. Analyser pics d'activité\n"; 
+    print_string "9. Statistiques par catégorie\n"; 
+    print_string "10. Quitter\n";
     print_string "Votre choix : ";
     read_int ()
   

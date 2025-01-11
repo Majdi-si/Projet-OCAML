@@ -91,7 +91,6 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
 
 
   let nb_vols = nb_vols_par_heure vols in
-  let nb_creneaux_rates = nb_creneaux_rates_par_heure vols in
   let heures = Array.make 24 (0, 0, 0, 0) in
   let nb_dep_arr = nb_depart_arrivee_par_heure vols in
   let nb_par_piste = nb_avions_par_piste_par_heure vols in
