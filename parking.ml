@@ -80,15 +80,22 @@ let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : uni
   ) ht
 
 let calculer_intervalles_occupation (vols : Vol.t list) : unit =
+  let parking_time = Params.get_parking_time () in 
   List.iter (fun (vol : Vol.t) ->
-    let parking_time = Params.get_parking_time () in
-    if vol.type_vol = "ARR" then
-      vol.occupation_parking <- { lower = vol.heure_parking; upper = vol.heure_parking + parking_time }
-    else if vol.type_vol = "DEP" then
-      let heure_debut_int = int_of_string vol.heure_debut in
-      vol.occupation_parking <- { lower = heure_debut_int - parking_time; upper = vol.dman }
-    else
-      vol.occupation_parking <- { lower = 0; upper = 0 }
+    match vol.type_vol with
+    | "ARR" -> 
+        let heure_parking = vol.heure_parking in
+        vol.occupation_parking <- { 
+          lower = heure_parking;
+          upper = heure_parking + parking_time 
+        }
+    | "DEP" -> 
+        let heure_dman = vol.dman in
+        vol.occupation_parking <- { 
+          lower = heure_dman - parking_time;
+          upper = heure_dman 
+        }
+    | _ -> ()
   ) vols
 
 let afficher_intervalles_occupation (vols : Vol.t list) : unit =
@@ -118,22 +125,23 @@ let calcul_conflit_parking (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t
   ) ht
 
 let count_conflicts (vols : Vol.t list) : int =
-  let ht = create_hashtbl_vide (nombre_parkings_differents vols) in
-  remplir_hashtbl vols ht;
   let total_conflicts = ref 0 in
-  ParkingHashtbl.iter (fun _ vols_parking ->
-    let rec count_conflicts_in_list acc = function
-      | [] -> acc
-      | vol1 :: rest ->
-        let conflicts = List.fold_left (fun count vol2 ->
-          if vol1 != vol2 &&
-             vol1.Vol.occupation_parking.lower < vol2.Vol.occupation_parking.upper &&
-             vol1.Vol.occupation_parking.upper > vol2.Vol.occupation_parking.lower
-          then count + 1
-          else count
-        ) 0 rest in
-        count_conflicts_in_list (acc + conflicts) rest
+  List.iter (fun vol1 ->
+    let heure1 = 
+      if vol1.Vol.type_vol = "DEP" then vol1.Vol.dman / 3600
+      else vol1.Vol.heure_parking / 3600 
     in
-    total_conflicts := !total_conflicts + count_conflicts_in_list 0 vols_parking
-  ) ht;
-  !total_conflicts
+    List.iter (fun vol2 ->
+      if vol1 != vol2 && vol1.Vol.parking = vol2.Vol.parking then
+        let heure2 = 
+          if vol2.Vol.type_vol = "DEP" then vol2.Vol.dman / 3600
+          else vol2.Vol.heure_parking / 3600
+        in
+        (* Vérifier que les conflits sont dans la même heure *)
+        if heure1 = heure2 && 
+           vol1.Vol.occupation_parking.lower < vol2.Vol.occupation_parking.upper &&
+           vol1.Vol.occupation_parking.upper > vol2.Vol.occupation_parking.lower then
+          incr total_conflicts
+    ) vols
+  ) vols;
+  !total_conflicts / 2

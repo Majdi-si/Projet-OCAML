@@ -42,9 +42,14 @@ module Params = struct
     print_string "3. Analyser conflits\n";
     print_string "4. Modifier paramètres\n";
     print_string "5. Afficher paramètres\n";
-    print_string "6. Quitter\n";
+    print_string "6. Changer fichier de données\n";
+    print_string "7. Quitter\n";
     print_string "Votre choix : ";
     read_int ()
+  
+  let get_nom_fichier_donnees () =
+    print_string "Entrez le chemin du fichier de données : ";
+    read_line ()
 
   let get_nom_fichier () =
     print_string "Nom du fichier CSV (sans extension) : ";
@@ -66,7 +71,7 @@ module Params = struct
   let modifier_parametres () =
     print_string "\n=== Modification des paramètres ===\n";
     print_string "Nouveau temps d'occupation parking (min) : ";
-    let new_park_time = read_int () * 60 in
+    let new_park_time = read_int () * 60 in (* Conversion minutes -> secondes *)
     print_string "Nouveau temps séparation ML/HL/HM (min) : ";
     let new_sep_1 = read_int () * 60 in
     print_string "Nouveau temps séparation HH (min) : ";

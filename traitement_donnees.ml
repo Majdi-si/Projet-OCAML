@@ -82,6 +82,14 @@ let nb_avions_par_piste_par_heure (vols : Vol.t list) =
 let ecrire_statistiques_par_heure_csv (vols : Vol.t list) 
   (hashtbl_parkings : Vol.t list Parking.ParkingHashtbl.t) 
   (config : config_csv) =
+
+  List.iter (fun vol ->
+    vol.Vol.occupation_parking <- { lower = 0; upper = 0 }
+  ) vols;
+  Parking.calculer_intervalles_occupation vols;
+  Parking.tri_heure_debut vols hashtbl_parkings;
+
+
   let nb_vols = nb_vols_par_heure vols in
   let nb_creneaux_rates = nb_creneaux_rates_par_heure vols in
   let heures = Array.make 24 (0, 0, 0, 0) in
@@ -98,23 +106,36 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
         heures.(heure) <- (total_retard + retard, count + 1, conflits, rates)
   ) vols;
 
-  (* Calcul des conflits de parking avec division par 2 *)
-  Parking.ParkingHashtbl.iter (fun _ vols_parking ->
+  (* Calcul des conflits de parking avec regroupement par heure *)
+  let conflits_par_heure = Array.make 24 0 in
+  Parking.ParkingHashtbl.iter (fun parking vols_parking ->
     List.iter (fun vol1 ->
+      let heure1 = 
+        if vol1.Vol.type_vol = "DEP" then vol1.Vol.dman / 3600
+        else vol1.Vol.heure_parking / 3600
+      in
       List.iter (fun vol2 ->
-        if vol1 != vol2 then
-          let heure = vol1.Vol.etot / 3600 in
-          if vol1.Vol.occupation_parking.lower < vol2.Vol.occupation_parking.upper &&
-             vol1.Vol.occupation_parking.upper > vol2.Vol.occupation_parking.lower then
-            let (tr, c, conf, r) = heures.(heure) in
-            heures.(heure) <- (tr, c, conf + 1, r)
-      ) vols_parking;
+        if vol1 != vol2 && vol1.Vol.parking = vol2.Vol.parking then
+          let heure2 = 
+            if vol2.Vol.type_vol = "DEP" then vol2.Vol.dman / 3600
+            else vol2.Vol.heure_parking / 3600
+          in
+          if heure1 = heure2 && 
+            vol1.Vol.occupation_parking.lower < vol2.Vol.occupation_parking.upper &&
+            vol1.Vol.occupation_parking.upper > vol2.Vol.occupation_parking.lower then
+            conflits_par_heure.(heure1) <- conflits_par_heure.(heure1) + 1
+      ) vols_parking
     ) vols_parking
   ) hashtbl_parkings;
 
-  (* Diviser le nombre de conflits par 2 car chaque conflit est compté deux fois *)
-  Array.iteri (fun i (tr, c, conf, r) ->
-    heures.(i) <- (tr, c, conf/2, r)
+  (* Diviser les conflits par 2 car chaque conflit est compté deux fois *)
+  Array.iteri (fun i conflicts ->
+    conflits_par_heure.(i) <- conflicts / 2
+  ) conflits_par_heure;
+
+  (* Mettre à jour les statistiques *)
+  Array.iteri (fun i (total_retard, count, _, rates) ->
+    heures.(i) <- (total_retard, count, conflits_par_heure.(i), rates)
   ) heures;
 
 
