@@ -46,20 +46,20 @@ let nb_vols_par_parking (hashtbl_parkings : Vol.t list Parking.ParkingHashtbl.t)
   ) hashtbl_parkings;
   parkings
 
-  let nb_depart_arrivee_par_heure (vols : Vol.t list) =
-    let heures = Array.make 24 (0,0) in
-    List.iter (fun (vol : Vol.t) ->
-      let heure = 
-        if vol.type_vol = "DEP" then vol.etot / 3600
-        else int_of_string vol.heure_debut / 3600
-      in
-      let (deps, arrs) = heures.(heure) in
-      if vol.type_vol = "DEP" then 
-        heures.(heure) <- (deps + 1, arrs)
-      else if vol.type_vol = "ARR" then
-        heures.(heure) <- (deps, arrs + 1)
-    ) vols;
-    heures
+let nb_depart_arrivee_par_heure (vols : Vol.t list) =
+  let heures = Array.make 24 (0,0) in
+  List.iter (fun (vol : Vol.t) ->
+    let heure = 
+      if vol.type_vol = "DEP" then vol.etot / 3600
+      else int_of_string vol.heure_debut / 3600
+    in
+    let (deps, arrs) = heures.(heure) in
+    if vol.type_vol = "DEP" then 
+      heures.(heure) <- (deps + 1, arrs)
+    else if vol.type_vol = "ARR" then
+      heures.(heure) <- (deps, arrs + 1)
+  ) vols;
+  heures
 
 let nb_avions_par_piste_par_heure (vols : Vol.t list) =
   let heures = Array.make 24 (0,0,0,0) in (* (26R, 27L, 26L, 27R) *)
@@ -78,17 +78,15 @@ let nb_avions_par_piste_par_heure (vols : Vol.t list) =
   ) vols;
   heures
 
-
 let ecrire_statistiques_par_heure_csv (vols : Vol.t list) 
-  (hashtbl_parkings : Vol.t list Parking.ParkingHashtbl.t) 
-  (config : config_csv) =
+    (hashtbl_parkings : Vol.t list Parking.ParkingHashtbl.t) 
+    (config : config_csv) =
 
   List.iter (fun vol ->
     vol.Vol.occupation_parking <- { lower = 0; upper = 0 }
   ) vols;
   Parking.calculer_intervalles_occupation vols;
   Parking.tri_heure_debut vols hashtbl_parkings;
-
 
   let nb_vols = nb_vols_par_heure vols in
   let heures = Array.make 24 (0, 0, 0, 0) in
@@ -137,7 +135,6 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
     heures.(i) <- (total_retard, count, conflits_par_heure.(i), rates)
   ) heures;
 
-
   let retards_optimises = 
     if config.avec_optimisation then begin
       (* Optimiser les pistes 26R et 27L *)
@@ -174,16 +171,14 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
   let fichier = open_out config.nom_fichier in
   
   (* En-tête *)
-  let header = "Heure;NB_vols;Retard moyen (minutes);Retard total (minutes)" ^
-    (if config.afficher_conflits then ";Nb_conflits_parking" else "") ^
-    ";Nb_creneaux_rates;NB_Departs;NB_Arrivees;Piste_26R;Piste_27L;Piste_26L;Piste_27R" ^
-    (if config.avec_optimisation then ";Retard_opt_26R;Retard_opt_27L" else "") ^
-    "\n" in
+  let header = "Heure;NB_vols;Retard moyen (minutes);Retard total (minutes);Nb_vols_en_retard" ^
+  (if config.afficher_conflits then ";Nb_conflits_parking" else "") ^
+  ";Nb_creneaux_rates;NB_Departs;NB_Arrivees;Piste_26R;Piste_27L;Piste_26L;Piste_27R" ^
+  (if config.avec_optimisation then ";Retard_opt_26R;Retard_opt_27L;Retard_opt_cumule;Retard_total_opt" else "") ^
+  "\n" in
   output_string fichier header;
   
   (* Écriture des données *)
-
-  (* Calcul des retards par heure *)
   Array.iteri (fun heure (total_retard, count, conflits_parking, creneaux_rates) ->
     let (deps, arrs) = nb_dep_arr.(heure) in
     let (p26r, p27l, p26l, p27r) = nb_par_piste.(heure) in
@@ -200,21 +195,35 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
       |> String.map (function '.' -> ',' | c -> c)
     else "0,00" in
   
-    let (r26R, r27L) = match retards_optimises with
-      | Some (r26R, r27L) -> (
-          Printf.sprintf "%.2f" r26R.(heure) |> String.map (function '.' -> ',' | c -> c),
-          Printf.sprintf "%.2f" r27L.(heure) |> String.map (function '.' -> ',' | c -> c)
-        )
-      | None -> ("0,00", "0,00") in
-      
-    let line = Printf.sprintf "%02d;%d;%s;%s%s;%d;%d;%d;%d;%d;%d;%d;%s;%s\n" 
-      heure 
-      nb_vols.(heure)
-      retard_moyen
-      retard_total
-      (if config.afficher_conflits then Printf.sprintf ";%d" conflits_parking else "")
-      creneaux_rates deps arrs p26r p27l p26l p27r
-      r26R r27L in
-    output_string fichier line
+    let (r26R, r27L, retard_cumule, retard_total_opt) = match retards_optimises with
+      | Some (r26R, r27L) -> 
+          let r26R_val = if r26R.(heure) > 0.0 then r26R.(heure) else 0.0 in
+          let r27L_val = if r27L.(heure) > 0.0 then r27L.(heure) else 0.0 in
+          let cumule = r26R_val +. r27L_val in
+          let total = cumule *. float_of_int count in
+          (Printf.sprintf "%.2f" r26R_val |> String.map (function '.' -> ',' | c -> c),
+           Printf.sprintf "%.2f" r27L_val |> String.map (function '.' -> ',' | c -> c),
+           Printf.sprintf "%.2f" cumule |> String.map (function '.' -> ',' | c -> c),
+           Printf.sprintf "%.2f" total |> String.map (function '.' -> ',' | c -> c))
+      | None -> ("0,00", "0,00", "0,00", "0,00")
+    in
+  
+    (* Ajouter count dans la ligne de sortie *)
+let conflits_str = if config.afficher_conflits then string_of_int conflits_parking else "0" in
+let line = Printf.sprintf "%02d;%d;%s;%s;%d;%s;%d;%d;%d;%d;%d;%d;%d;%s;%s;%s;%s\n"
+  heure 
+  nb_vols.(heure)
+  retard_moyen
+  retard_total
+  count
+  conflits_str
+  creneaux_rates 
+  deps arrs 
+  p26r p27l p26l p27r
+  r26R r27L 
+  retard_cumule 
+  retard_total_opt 
+in
+output_string fichier line
   ) heures;
   close_out fichier
