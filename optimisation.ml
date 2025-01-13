@@ -79,49 +79,55 @@ let afficher_sequence (seq : sequence) =
   ) seq.vols
 
 let optimiser_jusqu_a_heure vols heure_cible piste =
-  let dernier_vol = ref None in
-  let resultat = ref None in
-  
-  for h = 0 to heure_cible do
-    let vols_heure = List.filter (fun v -> 
-      let heure = v.Vol.etot / 3600 in
-      heure = h && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste
-    ) vols in
-    
-    if List.length vols_heure > 0 then begin
-      (* Mettre à jour les ETOT en fonction du dernier vol *)
-      (match !dernier_vol with
-      | Some last_vol -> 
-          List.iter (fun v -> 
-            let separation = Ttot.separation_time last_vol.Vol.turbulence v.Vol.turbulence in
-            v.Vol.etot <- max v.Vol.etot (last_vol.Vol.ttot + separation)
-          ) vols_heure
-      | None -> ());
+  (* Fonction récursive auxiliaire pour traiter chaque heure *)
+  let rec process_hours dernier_vol resultat h =
+    if h > heure_cible then 
+      resultat
+    else
+      (* Filtrer les vols de l'heure courante *)
+      let vols_heure = List.filter (fun v -> 
+        let heure = v.Vol.etot / 3600 in
+        heure = h && v.Vol.type_vol = "DEP" && v.Vol.qfu = piste
+      ) vols in
+      
+      if List.length vols_heure = 0 then
+        (* Pas de vols cette heure, passer à l'heure suivante *)
+        process_hours dernier_vol resultat (h + 1)
+      else begin
+        (* Mettre à jour les ETOT selon le dernier vol *)
+        (match dernier_vol with
+        | Some last_vol -> 
+            List.iter (fun v -> 
+              let separation = Ttot.separation_time last_vol.Vol.turbulence v.Vol.turbulence in
+              v.Vol.etot <- max v.Vol.etot (last_vol.Vol.ttot + separation)
+            ) vols_heure
+        | None -> ());
 
-      (* Optimiser la séquence *)
-      let sequence = optimiser_sequence vols_heure in
-      
-      (* Mettre à jour les TTOT après optimisation *)
-      List.iter (fun v ->
-        v.Vol.ttot <- v.Vol.etot
-      ) sequence.vols;
-      
-      (* Garder le dernier vol pour la prochaine heure *)
-      dernier_vol := Some (List.hd (List.rev sequence.vols));
-      
-      if h = heure_cible then
-        resultat := Some sequence
-    end
-  done;
-  !resultat
+        (* Optimiser la séquence *)
+        let sequence = optimiser_sequence vols_heure in
+        
+        (* Mettre à jour les TTOT *)
+        List.iter (fun v -> v.Vol.ttot <- v.Vol.etot) sequence.vols;
+        
+        (* Garder le dernier vol pour l'itération suivante *)
+        let nouveau_dernier = Some (List.hd (List.rev sequence.vols)) in
+        let nouveau_resultat = if h = heure_cible then Some sequence else resultat in
+        
+        process_hours nouveau_dernier nouveau_resultat (h + 1)
+      end
+  in
+  
+  process_hours None None 0
 
 let optimiser_piste vols piste =
-  let resultats = Array.make 24 None in
-  for h = 0 to 23 do
-    let resultat = optimiser_jusqu_a_heure vols h piste in
-    resultats.(h) <- resultat
-  done;
-  resultats
+  let rec process_hours acc h =
+    if h >= 24 then
+      acc
+    else 
+      let resultat = optimiser_jusqu_a_heure vols h piste in
+      process_hours (Array.set acc h resultat; acc) (h + 1)
+  in
+  process_hours (Array.make 24 None) 0
 
 let afficher_resultats_piste piste resultats =
   Printf.printf "\n=== Résultats pour la piste %s ===\n" piste;

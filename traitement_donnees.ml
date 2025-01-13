@@ -174,27 +174,47 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
   let fichier = open_out config.nom_fichier in
   
   (* En-tête *)
-  let header = "Heure,NB_vols,Retard moyen (minutes),Retard total (minutes)" ^
-    (if config.afficher_conflits then ",Nb_conflits_parking" else "") ^
-    ",Nb_creneaux_rates,NB_Departs,NB_Arrivees,Piste_26R,Piste_27L,Piste_26L,Piste_27R" ^
-    (if config.avec_optimisation then ",Retard_opt_26R,Retard_opt_27L" else "") ^
+  let header = "Heure;NB_vols;Retard moyen (minutes);Retard total (minutes)" ^
+    (if config.afficher_conflits then ";Nb_conflits_parking" else "") ^
+    ";Nb_creneaux_rates;NB_Departs;NB_Arrivees;Piste_26R;Piste_27L;Piste_26L;Piste_27R" ^
+    (if config.avec_optimisation then ";Retard_opt_26R;Retard_opt_27L" else "") ^
     "\n" in
   output_string fichier header;
-
+  
   (* Écriture des données *)
+
+  (* Calcul des retards par heure *)
   Array.iteri (fun heure (total_retard, count, conflits_parking, creneaux_rates) ->
     let (deps, arrs) = nb_dep_arr.(heure) in
     let (p26r, p27l, p26l, p27r) = nb_par_piste.(heure) in
-    let line = Printf.sprintf "%02d,%d,%.2f,%d%s,%d,%d,%d,%d,%d,%d,%d%s\n" 
+  
+    (* Calcul du retard moyen - utilise count pour ne compter que les vols avec retard *)
+    let retard_moyen = if count > 0 then 
+      Printf.sprintf "%.2f" (float_of_int total_retard /. float_of_int count /. 60.0)
+      |> String.map (function '.' -> ',' | c -> c)
+    else "0,00" in
+    
+    (* Calcul du retard total - conversion directe des secondes en minutes *)
+    let retard_total = if total_retard > 0 then
+      Printf.sprintf "%.2f" (float_of_int total_retard /. 60.0)
+      |> String.map (function '.' -> ',' | c -> c)
+    else "0,00" in
+  
+    let (r26R, r27L) = match retards_optimises with
+      | Some (r26R, r27L) -> (
+          Printf.sprintf "%.2f" r26R.(heure) |> String.map (function '.' -> ',' | c -> c),
+          Printf.sprintf "%.2f" r27L.(heure) |> String.map (function '.' -> ',' | c -> c)
+        )
+      | None -> ("0,00", "0,00") in
+      
+    let line = Printf.sprintf "%02d;%d;%s;%s%s;%d;%d;%d;%d;%d;%d;%d;%s;%s\n" 
       heure 
-      nb_vols.(heure) 
-      (if count > 0 then float_of_int total_retard /. float_of_int count /. 60.0 else 0.0)
-      (total_retard / 60)
-      (if config.afficher_conflits then Printf.sprintf ",%d" conflits_parking else "")
+      nb_vols.(heure)
+      retard_moyen
+      retard_total
+      (if config.afficher_conflits then Printf.sprintf ";%d" conflits_parking else "")
       creneaux_rates deps arrs p26r p27l p26l p27r
-      (match retards_optimises with
-      | Some (r26R, r27L) -> Printf.sprintf ",%.2f,%.2f" r26R.(heure) r27L.(heure)
-      | None -> "") in
+      r26R r27L in
     output_string fichier line
   ) heures;
   close_out fichier

@@ -1,0 +1,153 @@
+OCAML-IA
+Rapport du Projet : Gestion des Départs et Occupation des Parkings
+
+
+
+
+
+
+Rapport du Projet : Gestion des Départs et Occupation des Parkings
+Sommaire
+Introduction
+Présentation du sujet et problématique
+Contexte et enjeux
+Travaux existants
+Problématique
+Méthodologie et algorithmes
+Traitement des données
+Calcul des ETOT et TTOT
+Gestion des conflits de parking
+Optimisation des séquences de départ
+Implémentation et résultats
+Modules OCaml
+Exportation et visualisation des résultats
+Analyse des résultats
+Performances et limites
+Organisation et répartition des tâches
+Conclusion et perspectives
+Bibliographie et annexes
+
+
+1. Introduction
+Contexte global
+L'aéroport Paris Charles de Gaulle (CDG) est l'un des plus grands hubs aériens d'Europe, gérant des centaines de milliers de vols chaque année. La gestion efficace des pistes et des parkings est cruciale pour minimiser les retards, éviter les conflits et garantir la fluidité du trafic aérien.
+L'accroissement du trafic aérien et les contraintes opérationnelles rendent indispensable la mise en place d'outils d’optimisation adaptés aux besoins spécifiques des aéroports modernes. Ce projet s'inscrit dans cette perspective et vise à fournir une solution basée sur le langage OCaml.
+Objectifs du projet
+L'objectif principal de ce projet était de développer un outil en OCaml permettant d'optimiser les mouvements des avions sur un aéroport. Cet outil vise à :
+Charger et traiter les données de trafic aérien sur une journée dans un aéroport.
+Calculer les horaires optimaux de décollage (TTOT) en respectant les contraintes opérationnelles.
+Identifier les conflits liés à l'utilisation des parkings.
+Fournir des indicateurs de performance dans un format exploitable.
+
+
+Structure du rapport
+
+Ce rapport est structuré de la manière suivante :
+La présentation du sujet et de la problématique.
+Les méthodes et algorithmes utilisés pour résoudre les problèmes identifiés.
+Les résultats obtenus et leur analyse.
+L'organisation et la répartition des tâches.
+Les conclusions et perspectives futures.
+La bibliographie et les annexes.
+
+2. Présentation du sujet et problématique
+Contexte et enjeux
+La coordination des départs et l’optimisation de l’utilisation des parkings sont des problèmes complexes en raison de la densité du trafic et des contraintes opérationnelles. Une mauvaise gestion entraîne des retards coûteux, une surcharge des infrastructures, une surconsommation de carburant au roulage et une baisse de la satisfaction des compagnies aériennes et des passagers.
+Les enjeux principaux incluent :
+La gestion des créneaux horaires (slots) : Un slot aérien est un créneau horaire qui donne le droit à une compagnie aérienne de faire décoller ou atterrir un avion dans un aéroport à un moment précis. Les slots permettent d’organiser le trafic dans une grande partie des aéroports et doivent de ce fait être respectés.
+La réduction des latences liés aux contraintes de turbulence : Les catégories L (Light), M (Medium) et H (Heavy) influencent les temps de séparation nécessaires entre les vols.
+L’optimisation des ressources au sol : L'utilisation des parkings doit être synchronisée avec les départs et arrivées pour éviter des conflits.
+Travaux existants
+Plusieurs systèmes de gestion du trafic aérien sont utilisés à l'échelle mondiale :
+
+Systèmes commerciaux :
+Airbus ProSky : Airbus a créé ProSky, une filiale dédiée à la modernisation des systèmes de gestion du trafic aérien (ATM), visant à optimiser l'efficacité et la sécurité de l'espace aérien. 
+Boeing et SESAR 3 : Boeing collabore avec des entreprises aéronautiques européennes dans le cadre de l'entreprise commune SESAR 3 pour renforcer la sécurité et la durabilité de l'espace aérien européen. 
+Recherche universitaire :
+Apprentissage artificiel en gestion du trafic aérien : Des chercheurs ont exploré l'utilisation de l'apprentissage automatique pour la prévision des trajectoires d'avions, améliorant ainsi la gestion du trafic aérien. citeturn0search3
+
+
+Optimisation du trafic aérien : Des travaux académiques ont été menés pour développer des algorithmes visant à optimiser la gestion du trafic aérien, contribuant à une meilleure efficacité et sécurité. citeturn0search11
+
+
+Ces références illustrent les efforts déployés tant par l'industrie que par le milieu académique pour améliorer la gestion du trafic aérien, tout en soulignant les défis liés à la flexibilité, aux coûts et à l'adaptation aux spécificités locales.
+
+
+Les outils existants présentent des limitations, notamment en termes de flexibilité, de coûts et de prise en compte des spécificités locales, justifiant ainsi le développement d’une solution sur mesure.
+Problématique
+Comment optimiser les horaires de décollage et la gestion des parkings tout en respectant les contraintes opérationnelles telles que les catégories de turbulence et les temps de séparation ? Cette question structure l'ensemble de notre démarche et oriente la conception de nos algorithmes et outils.
+
+3. Méthodologie et algorithmes
+Traitement des données
+Les données de trafic sont fournies sous forme d'un fichier texte. Chaque ligne correspond à un mouvement (arrivée ou départ) et contient les informations suivantes :
+Type de mouvement : ARR (Arrivée) ou DEP (Départ).
+Identifiant unique de l’avion.
+QFU : Orientation de la piste.
+Catégorie de turbulence : L (Light), M (Medium), H (Heavy).
+Parking assigné.
+Horaires : Heure de début, heure de piste, créneau (en secondes depuis minuit).
+Trajectoire : Coordonnées des points suivis.
+Ces données sont traitées ligne par ligne en OCaml et stockées dans une liste d’enregistrements de type vol, contenant tous les champs nécessaires , facilitant leur manipulation ultérieure.
+Calcul des ETOT et TTOT
+ETOT (Estimated Take-Off Time) :
+Pour un vol sans créneau : Heure de début + 5 * Longueur de la trajectoire (en secondes).
+Pour un vol avec créneau : Heure précisée dans les données.
+TTOT (Target Take-Off Time) :
+Algorithme glouton basé sur un tri des ETOT par ordre croissant.
+Application des temps de séparation en fonction des catégories de turbulence.
+Gestion des conflits de parking
+Les conflits sont détectés à l’aide de tables de hachage (Hashtbl) permettant de suivre l’utilisation des parkings en temps réel. Les durées d’occupation sont calculées comme suit :
+Pour les arrivées : par défaut 15 minutes après la fin de la trajectoire.
+Pour les départs : par défaut 15 minutes avant l’heure de début.
+les temps d’occupation des parking ainsi que les temps de séparation entre les décollages  d’avions de différentes catégories sont rentrés par l’utilisateur au lancement du programme
+Optimisation des séquences de départ
+Un algorithme de type "branch and bound" a été implémenté pour optimiser la séquence de départ et réduire les retards globaux. Cet algorithme fonctionne sur des sous-ensembles de départs correspondant à des plages horaires restreintes, sa complexité étant exponentielle.
+
+4. Implémentation et résultats
+Modules OCaml
+Les modules principaux incluent :
+Lecture des fichiers de données : Extraction et mise en forme des informations.
+Traitement des informations : Calcul des ETOT, TTOT et détection des conflits.
+Visualisation des résultats : Exportation des données sous format CSV.
+Exportation et visualisation des résultats
+Les résultats sont exportés sous format CSV pour faciliter leur analyse. Des outils comme Excel permettent de générer des visualisations claires :
+Histogrammes des retards moyens par heure.
+Courbes représentant la densité des mouvements.
+Analyse des résultats
+Les résultats montrent :
+A compléter
+Performances et limites
+L’algorithme "branch and bound" est limité par sa complexité, ce qui le rend moins performant pour des volumes de trafic élevés.
+Les données de test simplifiées ne reflètent pas toujours les scénarios réels des aéroports.
+
+5. Organisation et répartition des tâches
+Le projet a été réalisé par une équipe de trois membres, avec la répartition suivante :
+Papa Amadou Dieng :
+
+Majdi Si-Salah :
+
+Hadriens Sievers :
+
+Des réunions hebdomadaires ont permis de suivre l’évolution du projet et de résoudre les problèmes rencontrés.
+
+6. Conclusion et perspectives
+Réalisations
+Ce projet a permis de :
+Développer un outil fonctionnel en OCaml pour optimiser les mouvements d’avions.
+Mettre en place une structure adaptée à la gestion des pistes et des parkings.
+Exporter et analyser les résultats pour des scénarios concrets.
+Perspectives
+Intégrer des données en temps réel provenant des systèmes radar.
+Adapter l’algorithme à d’autres environnements aéroportuaires.
+Améliorer les performances en réduisant la complexité des calculs.
+
+7. Bibliographie et annexes
+Bibliographie
+Documentation OCaml : https://ocaml.org
+
+Documentation sur les algorithmes gloutons et "branch and bound".
+Annexes
+Extraits de code OCaml.
+Diagrammes explicatifs des algorithmes.
+Exemples de fichiers CSV et visualisations.
+
