@@ -1,69 +1,97 @@
+Dman.cmo : \
+    Vol.cmi \
+    Dman.cmi
+Dman.cmx : \
+    Vol.cmx \
+    Dman.cmi
+Dman.cmi : \
+    Vol.cmi
 Etot.cmo : \
-    vol.cmi
+    Vol.cmi \
+    Etot.cmi
 Etot.cmx : \
-    vol.cmx
-dman.cmo : \
-    vol.cmi
-dman.cmx : \
-    vol.cmx
-extraire.cmo : \
-    vol.cmi
-extraire.cmx : \
-    vol.cmx
-main.cmo : \
-    vol.cmi \
-    ttot.cmo \
-    traitement_donnees.cmo \
-    parking.cmo \
-    parametre.cmo \
-    optimisation.cmo \
-    extraire.cmo \
-    Etot.cmo \
-    dman.cmo
-main.cmx : \
-    vol.cmx \
-    ttot.cmx \
-    traitement_donnees.cmx \
-    parking.cmx \
-    parametre.cmx \
-    optimisation.cmx \
-    extraire.cmx \
+    Vol.cmx \
+    Etot.cmi
+Etot.cmi : \
+    Vol.cmi
+Extraire.cmo : \
+    Vol.cmi
+Extraire.cmx : \
+    Vol.cmx
+Main.cmo : \
+    Vol.cmi \
+    Ttot.cmi \
+    Traitement_donnees.cmi \
+    Parking.cmi \
+    Parametre.cmi \
+    Optimisation.cmi \
+    Extraire.cmo \
+    Etot.cmi \
+    Dman.cmi
+Main.cmx : \
+    Vol.cmx \
+    Ttot.cmx \
+    Traitement_donnees.cmx \
+    Parking.cmx \
+    Parametre.cmx \
+    Optimisation.cmx \
+    Extraire.cmx \
     Etot.cmx \
-    dman.cmx
-optimisation.cmo : \
-    vol.cmi \
-    ttot.cmo
-optimisation.cmx : \
-    vol.cmx \
-    ttot.cmx
-parametre.cmo :
-parametre.cmx :
-parking.cmo : \
-    vol.cmi \
-    parametre.cmo \
-    dman.cmo
-parking.cmx : \
-    vol.cmx \
-    parametre.cmx \
-    dman.cmx
-traitement_donnees.cmo : \
-    vol.cmi \
-    parking.cmo \
-    optimisation.cmo
-traitement_donnees.cmx : \
-    vol.cmx \
-    parking.cmx \
-    optimisation.cmx
-ttot.cmo : \
-    vol.cmi \
-    parametre.cmo \
-    Etot.cmo
-ttot.cmx : \
-    vol.cmx \
-    parametre.cmx \
-    Etot.cmx
-vol.cmo : \
-    vol.cmi
-vol.cmx : \
-    vol.cmi
-vol.cmi :
+    Dman.cmx
+Optimisation.cmo : \
+    Vol.cmi \
+    Ttot.cmi \
+    Optimisation.cmi
+Optimisation.cmx : \
+    Vol.cmx \
+    Ttot.cmx \
+    Optimisation.cmi
+Optimisation.cmi : \
+    Vol.cmi
+Parametre.cmo : \
+    Parametre.cmi
+Parametre.cmx : \
+    Parametre.cmi
+Parametre.cmi :
+Parking.cmo : \
+    Vol.cmi \
+    Parametre.cmi \
+    Dman.cmi \
+    Parking.cmi
+Parking.cmx : \
+    Vol.cmx \
+    Parametre.cmx \
+    Dman.cmx \
+    Parking.cmi
+Parking.cmi : \
+    Vol.cmi
+Traitement_donnees.cmo : \
+    Vol.cmi \
+    Parking.cmi \
+    Optimisation.cmi \
+    Traitement_donnees.cmi
+Traitement_donnees.cmx : \
+    Vol.cmx \
+    Parking.cmx \
+    Optimisation.cmx \
+    Traitement_donnees.cmi
+Traitement_donnees.cmi : \
+    Vol.cmi \
+    Parking.cmi
+Ttot.cmo : \
+    Vol.cmi \
+    Parametre.cmi \
+    Etot.cmi \
+    Ttot.cmi
+Ttot.cmx : \
+    Vol.cmx \
+    Parametre.cmx \
+    Etot.cmx \
+    Ttot.cmi
+Ttot.cmi : \
+    Vol.cmi
+Vol.cmo : \
+    Vol.cmi
+Vol.cmx : \
+    Vol.cmi
+Vol.cmi :

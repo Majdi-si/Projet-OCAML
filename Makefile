@@ -1,4 +1,4 @@
-SOURCES = parametre.ml vol.ml extraire.ml Etot.ml ttot.ml dman.ml parking.ml optimisation.ml traitement_donnees.ml  main.ml
+SOURCES = Parametre.ml Vol.ml Extraire.ml Etot.ml Ttot.ml Dman.ml Parking.ml Optimisation.ml Traitement_donnees.ml Main.ml
 TARGET = main
 
 OCAMLC   = ocamlc -g
@@ -19,7 +19,7 @@ $(TARGET).opt: $(OBJS_OPT)
 	$(OCAMLOPT) -o $@  $^
 
 %.cmi: %.mli
-	$(OCAMLC) $<
+	$(OCAMLC) -c $<
 
 %.cmo: %.ml
 	$(OCAMLC) -c $<

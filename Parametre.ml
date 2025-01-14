@@ -1,3 +1,5 @@
+(* parametre.ml *)
+
 module Params = struct
   type config = {
     parking_time : int;
@@ -11,8 +13,8 @@ module Params = struct
   }
 
   let current_config = ref {
-    parking_time = 15 * 60;
-    type_separation = (180, 120, 60)
+    parking_time = 15 * 60;           (* 15 minutes par défaut *)
+    type_separation = (180, 120, 60)  (* Séparations par défaut en secondes *)
   }
 
   let create_config parking_time type_separation = { 
@@ -49,7 +51,7 @@ module Params = struct
     print_string "10. Quitter\n";
     print_string "Votre choix : ";
     read_int ()
-  
+
   let get_nom_fichier_donnees () =
     print_string "Entrez le chemin du fichier de données : ";
     read_line ()
@@ -63,6 +65,10 @@ module Params = struct
     print_string "Inclure optimisation (o/n) ? ";
     read_line () = "o"
 
+  let afficher_conflits () =
+    print_string "Afficher les conflits de parking (o/n) ? ";
+    read_line () = "o"
+
   let get_piste () =
     print_string "Piste (26R/27L) : ";
     read_line ()
@@ -74,7 +80,7 @@ module Params = struct
   let modifier_parametres () =
     print_string "\n=== Modification des paramètres ===\n";
     print_string "Nouveau temps d'occupation parking (min) : ";
-    let new_park_time = read_int () * 60 in (* Conversion minutes -> secondes *)
+    let new_park_time = read_int () * 60 in    (* Conversion minutes -> secondes *)
     print_string "Nouveau temps séparation ML/HL/HM (min) : ";
     let new_sep_1 = read_int () * 60 in
     print_string "Nouveau temps séparation HH (min) : ";

@@ -207,9 +207,7 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
            Printf.sprintf "%.2f" total |> String.map (function '.' -> ',' | c -> c))
       | None -> ("0,00", "0,00", "0,00", "0,00")
     in
-  
-    (* Ajouter count dans la ligne de sortie *)
-let conflits_str = if config.afficher_conflits then string_of_int conflits_parking else "0" in
+  let conflits_str = if config.afficher_conflits then string_of_int conflits_parking else "0" in
 let line = Printf.sprintf "%02d;%d;%s;%s;%d;%s;%d;%d;%d;%d;%d;%d;%d;%s;%s;%s;%s\n"
   heure 
   nb_vols.(heure)
