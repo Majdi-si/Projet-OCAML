@@ -46,8 +46,6 @@ parking.cmx : \
     vol.cmx \
     parametre.cmx \
     dman.cmx
-test.cmo :
-test.cmx :
 traitement_donnees.cmo : \
     vol.cmi \
     parking.cmo \

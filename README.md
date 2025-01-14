@@ -16,6 +16,7 @@ Le projet est organisé en plusieurs modules :
 - **Parking** : Gestion des conflits de parking
 - **Optimisation** : Algorithmes d'optimisation des séquences
 - **Traitement_donnees** : Génération des statistiques
+- **Parametres** : Configuration des paramètres et mise en place de l'interface utilisateur
 
 ## Utilisation
 
@@ -60,6 +61,31 @@ Les paramètres configurables incluent :
 - Temps d'occupation parking
 - Temps de séparation entre avions selon leur catégorie de turbulence
 - Choix des pistes à analyser
+
+
+## Lancement de l'application
+
+### Prérequis
+- OCaml (version 4.13.0 ou supérieure)
+- Dune build system
+- Make
+
+### Compilation 
+Compiler le projet
+```bash
+make
+```
+
+### Exécution
+Pour lancer l'application :
+```bash
+./main
+```
+
+Pour nettoyer les fichiers de compilation :
+```bash
+make clean
+```
 
 ## Auteurs
 - Papa Amadou Dieng
