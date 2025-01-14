@@ -1,5 +1,3 @@
-(* parametre.ml *)
-
 module Params = struct
   type config = {
     parking_time : int;
