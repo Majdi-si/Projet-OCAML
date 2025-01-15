@@ -80,7 +80,7 @@ let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : uni
   ) ht
 
 let calculer_intervalles_occupation (vols : Vol.t list) : unit =
-  let parking_time = Params.park_time () in 
+  let parking_time = Params.get_parking_time () in 
   List.iter (fun (vol : Vol.t) ->
     match vol.type_vol with
     | "ARR" -> 
