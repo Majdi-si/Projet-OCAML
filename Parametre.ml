@@ -11,8 +11,14 @@ module Params = struct
   }
 
   let current_config = ref {
-    parking_time = 15 * 60;           (* 15 minutes par défaut *)
-    type_separation = (180, 120, 60)  (* Séparations par défaut en secondes *)
+    parking_time = 0;  (* Sera initialisé par l'utilisateur *)
+    type_separation = (0, 0, 0)
+  }
+
+let init_config park_time sep1 sep2 sep3 =
+  current_config := {
+    parking_time = park_time;
+    type_separation = (sep1, sep2, sep3)
   }
 
   let create_config parking_time type_separation = { 

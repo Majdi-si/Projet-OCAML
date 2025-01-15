@@ -31,11 +31,13 @@ let rec menu_principal tous_vols hashtbl_parkings =
       menu_principal tous_vols hashtbl_parkings
       
     | 4 -> (* Modifier paramètres *)
-      Params.modifier_parametres();
-      (* Recalculer les intervalles après modification des paramètres *)
-      Parking.calculer_intervalles_occupation tous_vols;
-      Parking.tri_heure_debut tous_vols hashtbl_parkings;
-      menu_principal tous_vols hashtbl_parkings
+        Params.modifier_parametres();
+        (* Recalculer tous les intervalles et conflits *)
+        List.iter (fun vol ->
+          vol.Vol.occupation_parking <- { lower = 0; upper = 0 }
+        ) tous_vols;
+        Parking.calculer_intervalles_occupation tous_vols;
+        Parking.recalculer_conflits tous_vols hashtbl_parkings;
       
   | 5 -> (* Afficher paramètres *)
       Params.afficher_parametres();
@@ -156,12 +158,6 @@ let () =
   let vols = Vol.extraire_info fichier in
   close_in fichier;
 
-  let parking_time = Params.get_parking_time () in
-  let (sep_1, sep_2, sep_3) = Params.get_separation_times () in
-  Printf.printf "Temps d'occupation d'un parking: %d minutes\n" (parking_time / 60);
-  Printf.printf "Temps de séparation ('M', 'L') | ('H', 'L') | ('H', 'M'): %d minutes\n" (sep_1 / 60);
-  Printf.printf "Temps de séparation ('H', 'H'): %d minutes\n" (sep_2 / 60);
-  Printf.printf "Temps de séparation pour le reste: %d minutes\n" (sep_3 / 60);
 
   let vols_avec_etot = Etot.calculer_etot vols in
   let vols_pistes_26R = Etot.dep_qfu vols_avec_etot "26R" in

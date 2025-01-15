@@ -35,3 +35,8 @@ val tri_heure_debut : Vol.t list -> Vol.t list ParkingHashtbl.t -> unit
     @param vols Liste des vols à analyser
     @param ht Table de hachage des parkings *)
 val calcul_conflit_parking : Vol.t list -> Vol.t list ParkingHashtbl.t -> unit
+
+(** Recalcule les conflits de parking après modification des paramètres
+    @param vols Liste des vols à analyser
+    @param ht Table de hachage *)
+val recalculer_conflits : Vol.t list -> Vol.t list ParkingHashtbl.t -> unit

@@ -81,6 +81,7 @@ let tri_heure_debut (vols : Vol.t list) (ht : Vol.t list ParkingHashtbl.t) : uni
 
 let calculer_intervalles_occupation (vols : Vol.t list) : unit =
   let parking_time = Params.get_parking_time () in 
+  Printf.printf "Temps d'occupation parking: %d\n" parking_time;
   List.iter (fun (vol : Vol.t) ->
     match vol.type_vol with
     | "ARR" -> 
@@ -145,3 +146,9 @@ let count_conflicts (vols : Vol.t list) : int =
     ) vols
   ) vols;
   !total_conflicts / 2
+
+let recalculer_conflits vols hashtbl =
+  calculer_intervalles_occupation vols;
+  tri_heure_debut vols hashtbl;
+  calcul_conflit_parking vols hashtbl
+  

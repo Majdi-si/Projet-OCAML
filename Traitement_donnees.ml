@@ -195,18 +195,19 @@ let ecrire_statistiques_par_heure_csv (vols : Vol.t list)
       |> String.map (function '.' -> ',' | c -> c)
     else "0,00" in
   
+    (* Calcul des retards optimisés *)
     let (r26R, r27L, retard_cumule, retard_total_opt) = match retards_optimises with
-      | Some (r26R, r27L) -> 
-          let r26R_val = if r26R.(heure) > 0.0 then r26R.(heure) else 0.0 in
-          let r27L_val = if r27L.(heure) > 0.0 then r27L.(heure) else 0.0 in
-          let cumule = r26R_val +. r27L_val in
-          let total = cumule *. float_of_int count in
-          (Printf.sprintf "%.2f" r26R_val |> String.map (function '.' -> ',' | c -> c),
-           Printf.sprintf "%.2f" r27L_val |> String.map (function '.' -> ',' | c -> c),
-           Printf.sprintf "%.2f" cumule |> String.map (function '.' -> ',' | c -> c),
-           Printf.sprintf "%.2f" total |> String.map (function '.' -> ',' | c -> c))
-      | None -> ("0,00", "0,00", "0,00", "0,00")
-    in
+    | Some (r26R, r27L) -> 
+      let r26R_val = if r26R.(heure) > 0.0 then r26R.(heure) else 0.0 in
+      let r27L_val = if r27L.(heure) > 0.0 then r27L.(heure) else 0.0 in
+      let cumule = r26R_val +. r27L_val in
+      let total = cumule *. float_of_int count in
+      (Printf.sprintf "%.2f" r26R_val |> String.map (function '.' -> ',' | c -> c),
+       Printf.sprintf "%.2f" r27L_val |> String.map (function '.' -> ',' | c -> c),
+       Printf.sprintf "%.2f" cumule |> String.map (function '.' -> ',' | c -> c),
+       Printf.sprintf "%.2f" total |> String.map (function '.' -> ',' | c -> c))
+  | None -> ("0,00", "0,00", "0,00", "0,00")
+in
   let conflits_str = if config.afficher_conflits then string_of_int conflits_parking else "0" in
 let line = Printf.sprintf "%02d;%d;%s;%s;%d;%s;%d;%d;%d;%d;%d;%d;%d;%s;%s;%s;%s\n"
   heure 
