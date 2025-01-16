@@ -37,7 +37,7 @@ let grouper_par_categorie (vols : Vol.t list) =
 (* Fonction principale d'optimisation *)
 let optimiser_sequence (vols : Vol.t list) =
   let best = ref { vols = []; cout = max_int } in
-  let max_iterations = 1000000 in
+  let max_iterations = 1000000000 in
   let iteration_count = ref 0 in
   List.iter (fun vol ->
     vol.Vol.ttot <- vol.Vol.etot;

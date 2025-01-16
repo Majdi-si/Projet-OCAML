@@ -150,5 +150,5 @@ let count_conflicts (vols : Vol.t list) : int =
 let recalculer_conflits vols hashtbl =
   calculer_intervalles_occupation vols;
   tri_heure_debut vols hashtbl;
-  calcul_conflit_parking vols hashtbl
+
   

@@ -38,6 +38,7 @@ let rec menu_principal tous_vols hashtbl_parkings =
         ) tous_vols;
         Parking.calculer_intervalles_occupation tous_vols;
         Parking.recalculer_conflits tous_vols hashtbl_parkings;
+        menu_principal tous_vols hashtbl_parkings  (* Ajout de cette ligne *)
       
   | 5 -> (* Afficher paramètres *)
       Params.afficher_parametres();
